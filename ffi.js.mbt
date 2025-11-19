@@ -1,5 +1,5 @@
 ///|
-extern "js" fn create_button(label : String) -> HTMLButtonElement =
+pub extern "js" fn HTMLButtonElement::new(label : String) -> HTMLButtonElement =
   #| (label) => {
   #|   let button = document.createElement('button')
   #|   button.textContent = label
@@ -7,14 +7,14 @@ extern "js" fn create_button(label : String) -> HTMLButtonElement =
   #| }
 
 ///|
-extern "js" fn HTMLButtonElement::add_event_listener(
+pub extern "js" fn HTMLButtonElement::add_event_listener(
   self : HTMLButtonElement,
   type_ : String,
   listener : (Event) -> Unit,
 ) -> Unit = "(button, type, listener) => button.addEventListener(type, listener)"
 
 ///|
-extern "js" fn HTMLButtonElement::remove_event_listener(
+pub extern "js" fn HTMLButtonElement::remove_event_listener(
   self : HTMLButtonElement,
   type_ : String,
   listener : (Event) -> Unit,
