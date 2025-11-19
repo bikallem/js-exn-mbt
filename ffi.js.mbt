@@ -49,22 +49,52 @@ pub extern "js" fn default_add_event_listener_options() -> AddEventListenerOptio
   #| () => ({})
 
 ///|
-pub extern "js" fn HTMLButtonElement::add_event_listener(
+extern "js" fn HTMLButtonElement::add_event_listener_ffi(
   self : HTMLButtonElement,
   type_ : String,
   listener : (Event) -> Unit,
-  options? : AddEventListenerOptions = default_add_event_listener_options(),
+  options : JsValue,
 ) -> Unit =
   #| (button, type, listener, options) => button.addEventListener(type, listener, options)
 
 ///|
-pub extern "js" fn HTMLButtonElement::remove_event_listener(
+pub fn HTMLButtonElement::add_event_listener(
   self : HTMLButtonElement,
   type_ : String,
   listener : (Event) -> Unit,
-  options? : EventListenerOptions = default_event_listener_options(),
+  options? : &AddEventListenerParam3,
+) -> Unit {
+  let options = if options is Some(options) {
+    options.to_js()
+  } else {
+    default_add_event_listener_options().to_js()
+  }
+  self.add_event_listener_ffi(type_, listener, options)
+}
+
+///|
+extern "js" fn HTMLButtonElement::remove_event_listener_ffi(
+  self : HTMLButtonElement,
+  type_ : String,
+  listener : (Event) -> Unit,
+  options : JsValue,
 ) -> Unit =
   #| (button, type, listener, options) => button.removeEventListener(type, listener, options)
+
+///|
+pub fn HTMLButtonElement::remove_event_listener(
+  self : HTMLButtonElement,
+  type_ : String,
+  listener : (Event) -> Unit,
+  options? : &RemoveEventListenerParam3,
+) -> Unit {
+  let options = if options is Some(options) {
+    options.to_js()
+  } else {
+    default_event_listener_options().to_js()
+  }
+  self.remove_event_listener_ffi(type_, listener, options)
+}
 
 ///|
 pub extern "js" fn Document::document() -> Document =
