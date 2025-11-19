@@ -20,4 +20,13 @@ fn main {
     "click", event_handler,
   ))
   body.append_child(remove_click_handler_btn)
+
+  // click once button
+  let click_once_btn = HTMLButtonElement::new("Click once")
+  click_once_btn.add_event_listener(
+    "click",
+    (_ : Event) => println("Button clicked once!"),
+    options=add_event_listener_options(once=true),
+  )
+  body.append_child(click_once_btn)
 }

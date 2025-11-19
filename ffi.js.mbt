@@ -1,4 +1,12 @@
 ///|
+pub extern "js" fn undefined() -> JsValue =
+  #| () => undefined
+
+///|
+pub extern "js" fn null() -> JsValue =
+  #| () => null
+
+///|
 pub extern "js" fn HTMLButtonElement::new(label : String) -> HTMLButtonElement =
   #| (label) => {
   #|   let button = document.createElement('button')
@@ -8,7 +16,7 @@ pub extern "js" fn HTMLButtonElement::new(label : String) -> HTMLButtonElement =
 
 ///|
 pub extern "js" fn event_listener_options(
-  capture : Bool,
+  capture? : Bool = false,
 ) -> EventListenerOptions =
   #| (capture) => ({ capture })
 
@@ -17,16 +25,27 @@ pub extern "js" fn default_event_listener_options() -> EventListenerOptions =
   #| () => ({})
 
 ///|
-pub extern "js" fn add_event_listener_options(
+extern "js" fn add_event_listener_options_ffi(
   capture : Bool,
   passive : Bool,
   once : Bool,
-  signal : AbortSignal,
-) -> AddEventListenerOptions =
-  #| (capture, passive, once, signal) => ({ capture, passive, once, signal })
+  signal : JsValue,
+) -> AddEventListenerOptions = "(capture, passive, once, signal) => ({ capture, passive, once, signal })"
 
 ///|
-pub extern "js" fn default_add_event_listener_options() -> AddEventListenerOptions = "() => {}"
+pub fn add_event_listener_options(
+  capture? : Bool = false,
+  passive? : Bool = false,
+  once? : Bool = false,
+  signal? : AbortSignal,
+) -> AddEventListenerOptions {
+  let signal = if signal is Some(signal) { signal.to_js() } else { undefined() }
+  add_event_listener_options_ffi(capture, passive, once, signal)
+}
+
+///|
+pub extern "js" fn default_add_event_listener_options() -> AddEventListenerOptions =
+  #| () => ({})
 
 ///|
 pub extern "js" fn HTMLButtonElement::add_event_listener(
