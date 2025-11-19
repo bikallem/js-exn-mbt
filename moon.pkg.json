@@ -1,0 +1,11 @@
+{
+    "is-main": true,
+    "targets": {
+        "ffi.js.mbt": [
+            "js"
+        ],
+        "ffi.wasm-gc.mbt": [
+            "wasm-gc"
+        ]
+    }
+}
