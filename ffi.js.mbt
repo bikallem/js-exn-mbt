@@ -7,18 +7,42 @@ pub extern "js" fn HTMLButtonElement::new(label : String) -> HTMLButtonElement =
   #| }
 
 ///|
+pub extern "js" fn event_listener_options(
+  capture : Bool,
+) -> EventListenerOptions =
+  #| (capture) => ({ capture })
+
+///|
+pub extern "js" fn default_event_listener_options() -> EventListenerOptions =
+  #| () => ({})
+
+///|
+pub extern "js" fn add_event_listener_options(
+  capture : Bool,
+  passive : Bool,
+  once : Bool,
+  signal : AbortSignal,
+) -> AddEventListenerOptions =
+  #| (capture, passive, once, signal) => ({ capture, passive, once, signal })
+
+///|
+pub extern "js" fn default_add_event_listener_options() -> AddEventListenerOptions = "() => {}"
+
+///|
 pub extern "js" fn HTMLButtonElement::add_event_listener(
   self : HTMLButtonElement,
   type_ : String,
   listener : (Event) -> Unit,
-) -> Unit = "(button, type, listener) => button.addEventListener(type, listener)"
+  options? : AddEventListenerOptions = default_add_event_listener_options(),
+) -> Unit = "(button, type, listener, options) => button.addEventListener(type, listener, options)"
 
 ///|
 pub extern "js" fn HTMLButtonElement::remove_event_listener(
   self : HTMLButtonElement,
   type_ : String,
   listener : (Event) -> Unit,
-) -> Unit = "(button, type, listener) => button.removeEventListener(type, listener)"
+  options? : EventListenerOptions = default_event_listener_options(),
+) -> Unit = "(button, type, listener, options) => button.removeEventListener(type, listener, options)"
 
 ///|
 pub extern "js" fn Document::document() -> Document = "() => document"
