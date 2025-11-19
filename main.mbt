@@ -10,14 +10,18 @@ fn main {
   // Add click handler button
   let add_click_handler_btn = HTMLButtonElement::new("Add click handler")
   add_click_handler_btn.add_event_listener("click", (_ : Event) => button.add_event_listener(
-    "click", event_handler,
+    "click",
+    event_handler,
+    options=true,
   ))
   body.append_child(add_click_handler_btn)
 
   // Remove click handler button
   let remove_click_handler_btn = HTMLButtonElement::new("Remove click handler")
   remove_click_handler_btn.add_event_listener("click", (_ : Event) => button.remove_event_listener(
-    "click", event_handler,
+    "click",
+    event_handler,
+    options=true,
   ))
   body.append_child(remove_click_handler_btn)
 
