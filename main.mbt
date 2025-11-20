@@ -37,7 +37,22 @@ fn main {
 // Trait object issue
 
 ///|
-trait T_A {}
+trait C {
+  to_js(Self) -> JsValue = _
+}
+
+///|
+impl C with to_js(self : Self) -> JsValue = "%identity"
+
+///|
+trait T_A: C {
+  id(Self) -> Unit = _
+}
+
+///|
+impl T_A with id(_) -> Unit {
+  ()
+}
 
 ///|
 struct A(Int)
@@ -46,7 +61,23 @@ struct A(Int)
 impl T_A for A
 
 ///|
-trait T_B {}
+impl C for A
+
+///|
+trait T_B: C {
+  id(Self) -> Unit = _
+}
+
+///|
+impl T_B with id(_) -> Unit {
+  ()
+}
+
+///|
+impl T_B for B
+
+///|
+impl C for B
 
 ///|
 struct B(String)
@@ -66,10 +97,12 @@ fn bar(_b : &T_B) -> Unit {
 
 ///|
 fn call() -> Unit {
-  let a = A(1)
-  let b = B("2")
+  let a : &T_A = A(1)
+  let _ = a.to_js() // a is not empty
+  let b : &T_B = B("2")
+  let _ = b.to_js() // b is not empty
   foo(a) // a is &T_A and foo takes &T_A
-  foo(b) // b is &T_B and foo takes &T_A -- what is going on here??   
-  bar(a) // a is &T_A but bar takes &T_B -- what is going on here??
+  // foo(b) // b is &T_B and foo takes &T_A -- what is going on here??
+  // bar(a) // a is &T_A but bar takes &T_B -- what is going on here??
   bar(b) // b is &T_B and bar takes &T_B
 }
