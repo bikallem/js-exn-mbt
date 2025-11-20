@@ -10,18 +10,17 @@ fn main {
   // Add click handler button
   let add_click_handler_btn = HTMLButtonElement::new("Add click handler")
   add_click_handler_btn.add_event_listener("click", (_ : Event) => button.add_event_listener(
-    "click",
-    event_handler,
-    options=true,
+    "click", event_handler,
   ))
   body.append_child(add_click_handler_btn)
 
   // Remove click handler button
+  let e : AddEventListenerOptions = add_event_listener_options(once=true)
   let remove_click_handler_btn = HTMLButtonElement::new("Remove click handler")
   remove_click_handler_btn.add_event_listener("click", (_ : Event) => button.remove_event_listener(
     "click",
     event_handler,
-    options=true,
+    options=e,
   ))
   body.append_child(remove_click_handler_btn)
 
@@ -30,7 +29,47 @@ fn main {
   click_once_btn.add_event_listener(
     "click",
     (_ : Event) => println("Button clicked once!"),
-    options=add_event_listener_options(once=true),
+    options=event_listener_options(capture=true),
   )
   body.append_child(click_once_btn)
+}
+
+// Trait object issue
+
+///|
+trait T_A {}
+
+///|
+struct A(Int)
+
+///|
+impl T_A for A
+
+///|
+trait T_B {}
+
+///|
+struct B(String)
+
+///|
+impl T_B for B
+
+///|
+fn foo(_a : &T_A) -> Unit {
+  println("foo called with &T_A")
+}
+
+///|
+fn bar(_b : &T_B) -> Unit {
+  println("bar called with &T_B")
+}
+
+///|
+fn call() -> Unit {
+  let a = A(1)
+  let b = B("2")
+  foo(a) // a is &T_A and foo takes &T_A
+  foo(b) // b is &T_B and foo takes &T_A -- what is going on here??   
+  bar(a) // a is &T_A but bar takes &T_B -- what is going on here??
+  bar(b) // b is &T_B and bar takes &T_B
 }

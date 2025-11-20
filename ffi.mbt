@@ -8,6 +8,12 @@ pub trait TJsValue {
 }
 
 ///|
+pub fn undefined() -> JsValue = "JsValue" "undefined"
+
+///|
+pub fn null() -> JsValue = "JsValue" "null"
+
+///|
 impl TJsValue with to_js(self : Self) -> JsValue = "%identity"
 
 ///|

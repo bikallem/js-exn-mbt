@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />  
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Moonbit exn via js FFI</title>
   <style>
@@ -10,6 +10,11 @@
 </head>
 
 <body>
+  <script type="module">
+    import { importObject } from "./ffi.mjs";
+    globalThis.JsValue = importObject.JsValue;
+    globalThis.WebAPI_HTMLButtonElement = importObject.WebAPI_HTMLButtonElement;
+  </script>
   <script type="module" src="target/js/release/build/js_exn_mbt.js"></script>
 </body>
 

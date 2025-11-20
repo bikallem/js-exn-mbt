@@ -7,5 +7,14 @@
         "ffi.wasm-gc.mbt": [
             "wasm-gc"
         ]
+    },
+    "supported-targets": [
+        "js",
+        "wasm-gc"
+    ],
+    "link": {
+        "wasm-gc": {
+            "use-js-builtin-string": true
+        }
     }
 }

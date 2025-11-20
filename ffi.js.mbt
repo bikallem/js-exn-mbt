@@ -1,20 +1,4 @@
 ///|
-pub extern "js" fn undefined() -> JsValue =
-  #| () => undefined
-
-///|
-pub extern "js" fn null() -> JsValue =
-  #| () => null
-
-///|
-pub extern "js" fn HTMLButtonElement::new(label : String) -> HTMLButtonElement =
-  #| (label) => {
-  #|   let button = document.createElement('button')
-  #|   button.textContent = label
-  #|   return button
-  #| }
-
-///|
 pub extern "js" fn event_listener_options(
   capture? : Bool = false,
 ) -> EventListenerOptions =
@@ -47,6 +31,10 @@ pub fn add_event_listener_options(
 ///|
 pub extern "js" fn default_add_event_listener_options() -> AddEventListenerOptions =
   #| () => ({})
+
+///|
+pub extern "js" fn HTMLButtonElement::new(label : String) -> HTMLButtonElement =
+  #| (label) => WebAPI_HTMLButtonElement.new(label)
 
 ///|
 extern "js" fn HTMLButtonElement::add_event_listener_ffi(
