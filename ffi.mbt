@@ -53,37 +53,3 @@ type AbortSignal
 
 ///|
 pub impl TJsValue for AbortSignal
-
-///|
-#external
-type AddEventListenerOptions
-
-///|
-pub impl TJsValue for AddEventListenerOptions
-
-///|
-/// Third parameter of addEventListener()
-pub trait AddEventListenerParam3: TJsValue {}
-
-///|
-pub impl AddEventListenerParam3 for Bool
-
-///|
-pub impl AddEventListenerParam3 for AddEventListenerOptions
-
-///|
-#external
-type EventListenerOptions
-
-///|
-pub impl TJsValue for EventListenerOptions
-
-///|
-/// Third parameter of removeEventListener()
-pub trait RemoveEventListenerParam3: TJsValue {}
-
-///|
-pub impl RemoveEventListenerParam3 for Bool
-
-///|
-pub impl RemoveEventListenerParam3 for EventListenerOptions
