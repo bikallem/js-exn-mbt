@@ -1,0 +1,95 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "bikallem/js_exn_mbt"
+
+// Values
+fn add_event_listener_options(capture? : Bool, passive? : Bool, once? : Bool, signal? : AbortSignal) -> AddEventListenerOptions
+
+fn cb((Event) -> Unit) -> EventListener
+
+fn default_event_listener_options() -> EventListenerOptions
+
+fn event_listener_options(capture? : Bool) -> EventListenerOptions
+
+fn null() -> JsNull
+
+// Errors
+
+// Types and methods
+type AbortSignal
+impl TJsValue for AbortSignal
+
+type AddEventListenerOptions
+impl AddEventListenerOptionsArg for AddEventListenerOptions
+
+type Document
+fn Document::body(Self) -> HTMLBodyElement
+fn Document::document() -> Self
+fn Document::query_selector(Self, String) -> HTMLButtonElement
+impl TJsValue for Document
+
+type Event
+impl TJsValue for Event
+
+pub(all) struct EventListener((Event) -> Unit)
+#deprecated
+fn EventListener::inner(Self) -> (Event) -> Unit
+impl AddEventListenerListenerArg for EventListener
+impl RemoveEventListenerListenerArg for EventListener
+
+type EventListenerOptions
+impl RemoveEventListenerOptionsArg for EventListenerOptions
+
+#external
+pub type EventTarget
+impl TEventTarget for EventTarget
+impl TJsValue for EventTarget
+
+type HTMLBodyElement
+fn HTMLBodyElement::append_child(Self, HTMLButtonElement) -> Unit
+impl TJsValue for HTMLBodyElement
+
+type HTMLButtonElement
+fn HTMLButtonElement::new(String) -> Self
+impl TEventTarget for HTMLButtonElement
+impl TJsValue for HTMLButtonElement
+
+type JsNull
+impl AddEventListenerListenerArg for JsNull
+impl RemoveEventListenerListenerArg for JsNull
+
+#external
+pub type JsValue
+fn JsValue::null() -> Self
+fn JsValue::undefined() -> Self
+
+// Type aliases
+
+// Traits
+pub trait AddEventListenerListenerArg {
+  to_js(Self) -> JsValue
+}
+
+pub trait AddEventListenerOptionsArg {
+  to_js(Self) -> JsValue
+}
+impl AddEventListenerOptionsArg for Bool
+
+pub trait RemoveEventListenerListenerArg {
+  to_js(Self) -> JsValue
+}
+
+pub trait RemoveEventListenerOptionsArg {
+  to_js(Self) -> JsValue
+}
+impl RemoveEventListenerOptionsArg for Bool
+
+pub trait TEventTarget : TJsValue {
+  add_event_listener(Self, String, &AddEventListenerListenerArg, options? : &AddEventListenerOptionsArg) -> Unit
+  remove_event_listener(Self, String, &RemoveEventListenerListenerArg, options? : &RemoveEventListenerOptionsArg) -> Unit
+}
+
+pub trait TJsValue {
+  to_js(Self) -> JsValue
+}
+impl TJsValue for Bool
+
