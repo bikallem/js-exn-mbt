@@ -110,10 +110,9 @@ impl TEventTarget with add_event_listener(
   listener : &AddEventListenerListenerArg,
   options? : &AddEventListenerOptionsArg,
 ) -> Unit {
-  let options = if options is Some(options) {
-    options.to_js()
-  } else {
-    default_add_event_listener_options().to_js()
+  let options = match options {
+    Some(options) => options.to_js()
+    None => default_add_event_listener_options().to_js()
   }
   add_event_listener_ffi(self.to_js(), type_, listener.to_js(), options)
 }
