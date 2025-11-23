@@ -71,13 +71,12 @@ type AddEventListenerOptions
 pub impl AddEventListenerOptionsArg for AddEventListenerOptions
 
 ///|
-extern "js" fn add_event_listener_options_ffi(
+fn add_event_listener_options_ffi(
   capture : Bool,
   passive : Bool,
   once : Bool,
   signal : JsValue,
-) -> AddEventListenerOptions =
-  #| (capture, passive, once, signal) => ({ capture, passive, once, signal })
+) -> AddEventListenerOptions = "webapi_AddEventListenerOptions" "new"
 
 ///|
 pub fn add_event_listener_options(
@@ -94,17 +93,15 @@ pub fn add_event_listener_options(
 }
 
 ///|
-extern "js" fn default_add_event_listener_options() -> AddEventListenerOptions =
-  #| () => ({})
+fn default_add_event_listener_options() -> AddEventListenerOptions = "webapi_Dictionary" "empty"
 
 ///|
-extern "js" fn add_event_listener_ffi(
+fn add_event_listener_ffi(
   obj : JsValue,
   type_ : String,
   listener : JsValue,
   options : JsValue,
-) -> Unit =
-  #| (obj, type, listener, options) => obj.addEventListener(type, listener, options)
+) -> Unit = "webapi_EventTarget" "addEventListener"
 
 ///|
 impl TEventTarget with add_event_listener(
@@ -160,23 +157,18 @@ type EventListenerOptions
 pub impl RemoveEventListenerOptionsArg for EventListenerOptions
 
 ///|
-pub extern "js" fn event_listener_options(
-  capture? : Bool = false,
-) -> EventListenerOptions =
-  #| (capture) => ({ capture })
+pub fn event_listener_options(capture? : Bool = false) -> EventListenerOptions = "webapi_EventListenerOptions" "new"
 
 ///|
-pub extern "js" fn default_event_listener_options() -> EventListenerOptions =
-  #| () => ({})
+pub fn default_event_listener_options() -> EventListenerOptions = "webapi_Dictionary" "empty"
 
 ///|
-extern "js" fn remove_event_listener_ffi(
+pub fn remove_event_listener_ffi(
   obj : JsValue,
   type_ : String,
   listener : JsValue,
   options : JsValue,
-) -> Unit =
-  #| (obj, type, listener, options) => obj.removeEventListener(type, listener, options)
+) -> Unit = "webapi_EventTarget" "removeEventListener"
 
 ///|
 impl TEventTarget with remove_event_listener(

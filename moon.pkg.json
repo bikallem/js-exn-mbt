@@ -1,13 +1,5 @@
 {
     "is-main": true,
-    "targets": {
-        "ffi.js.mbt": [
-            "js"
-        ],
-        "ffi.wasm-gc.mbt": [
-            "wasm-gc"
-        ]
-    },
     "supported-targets": [
         "js",
         "wasm-gc"

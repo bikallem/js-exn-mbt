@@ -3,4 +3,4 @@
 type JsNull
 
 ///|
-pub extern "js" fn null() -> JsNull = "() => null"
+pub fn null() -> JsNull = "JsNull" "null"
