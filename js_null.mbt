@@ -3,4 +3,5 @@
 type JsNull
 
 ///|
-pub fn null() -> JsNull = "JsNull" "null"
+#as_free_fn
+pub fn JsNull::null() -> JsNull = "JsNull" "null"

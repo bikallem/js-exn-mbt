@@ -35,19 +35,16 @@ pub trait AddEventListenerListenerArg {
 }
 
 ///|
+#external
+pub(all) type EventListener
+
+///|
 pub impl AddEventListenerListenerArg for EventListener with to_js(
   self : EventListener,
 ) -> JsValue = "%identity"
 
 ///|
-#external
-pub(all) type EventListener
-
-///|
 pub fn cb(callback : (Event) -> Unit) -> EventListener = "webapi_EventListener" "new"
-
-///|
-pub impl AddEventListenerListenerArg for EventListener
 
 ///|
 pub impl AddEventListenerListenerArg for JsNull with to_js(self : JsNull) -> JsValue = "%identity"

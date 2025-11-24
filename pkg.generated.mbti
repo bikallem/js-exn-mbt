@@ -10,8 +10,6 @@ fn default_event_listener_options() -> EventListenerOptions
 
 fn event_listener_options(capture? : Bool) -> EventListenerOptions
 
-fn null() -> JsNull
-
 fn remove_event_listener_ffi(JsValue, String, JsValue, JsValue) -> Unit
 
 // Errors
@@ -32,9 +30,8 @@ impl TJsValue for Document
 type Event
 impl TJsValue for Event
 
-pub(all) struct EventListener((Event) -> Unit)
-#deprecated
-fn EventListener::inner(Self) -> (Event) -> Unit
+#external
+pub(all) type EventListener
 impl AddEventListenerListenerArg for EventListener
 impl RemoveEventListenerListenerArg for EventListener
 
@@ -56,6 +53,8 @@ impl TEventTarget for HTMLButtonElement
 impl TJsValue for HTMLButtonElement
 
 type JsNull
+#as_free_fn
+fn JsNull::null() -> Self
 impl AddEventListenerListenerArg for JsNull
 impl RemoveEventListenerListenerArg for JsNull
 
