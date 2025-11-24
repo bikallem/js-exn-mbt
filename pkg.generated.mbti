@@ -12,6 +12,8 @@ fn event_listener_options(capture? : Bool) -> EventListenerOptions
 
 fn null() -> JsNull
 
+fn remove_event_listener_ffi(JsValue, String, JsValue, JsValue) -> Unit
+
 // Errors
 
 // Types and methods
@@ -23,7 +25,7 @@ impl AddEventListenerOptionsArg for AddEventListenerOptions
 
 type Document
 fn Document::body(Self) -> HTMLBodyElement
-fn Document::document() -> Self
+fn Document::new() -> Self
 fn Document::query_selector(Self, String) -> HTMLButtonElement
 impl TJsValue for Document
 

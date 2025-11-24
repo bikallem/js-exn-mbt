@@ -24,7 +24,8 @@ pub impl TJsValue for EventTarget
 ///|
 pub impl TEventTarget for EventTarget
 
-fn [A] identity(a : A) -> JsValue = "%identity"
+///|
+fn[A] identity(a : A) -> JsValue = "%identity"
 
 //---------------------------------------------------------------------------------------------------------------------------------
 // undefined addEventListener(DOMString type, EventListener? callback, optional (AddEventListenerOptions or boolean) options = {});
