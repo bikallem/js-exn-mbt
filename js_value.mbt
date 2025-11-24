@@ -14,7 +14,11 @@ pub fn JsValue::undefined() -> JsValue = "JsValue" "undefined"
 pub fn JsValue::null() -> JsValue = "JsValue" "null"
 
 ///|
-impl TJsValue with to_js(self : Self) -> JsValue = "%identity"
+impl TJsValue with to_js(self : Self) -> JsValue {
+  identity(self.to_js())
+}
 
 ///|
-pub impl TJsValue for Bool with to_js(self : Bool) -> JsValue = "%identity"
+pub impl TJsValue for Bool with to_js(self : Bool) -> JsValue {
+  identity(self)
+}
