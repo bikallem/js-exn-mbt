@@ -24,6 +24,8 @@ pub impl TJsValue for EventTarget
 ///|
 pub impl TEventTarget for EventTarget
 
+fn [A] identity(a : A) -> JsValue = "%identity"
+
 //---------------------------------------------------------------------------------------------------------------------------------
 // undefined addEventListener(DOMString type, EventListener? callback, optional (AddEventListenerOptions or boolean) options = {});
 //---------------------------------------------------------------------------------------------------------------------------------
@@ -35,7 +37,9 @@ pub trait AddEventListenerListenerArg {
 }
 
 ///|
-impl AddEventListenerListenerArg with to_js(_ : Self) -> JsValue = "%identity"
+impl AddEventListenerListenerArg with to_js(self : Self) -> JsValue {
+  identity(self.to_js())
+}
 
 ///|
 pub(all) struct EventListener((Event) -> Unit)
@@ -58,7 +62,9 @@ pub trait AddEventListenerOptionsArg {
 }
 
 ///|
-impl AddEventListenerOptionsArg with to_js(_ : Self) -> JsValue = "%identity"
+impl AddEventListenerOptionsArg with to_js(self : Self) -> JsValue {
+  identity(self.to_js())
+}
 
 ///|
 pub impl AddEventListenerOptionsArg for Bool
@@ -128,7 +134,9 @@ pub trait RemoveEventListenerListenerArg {
 }
 
 ///|
-impl RemoveEventListenerListenerArg with to_js(_ : Self) -> JsValue = "%identity"
+impl RemoveEventListenerListenerArg with to_js(self : Self) -> JsValue {
+  identity(self.to_js())
+}
 
 ///|
 pub impl RemoveEventListenerListenerArg for EventListener
@@ -143,7 +151,9 @@ pub trait RemoveEventListenerOptionsArg {
 }
 
 ///|
-impl RemoveEventListenerOptionsArg with to_js(_ : Self) -> JsValue = "%identity"
+impl RemoveEventListenerOptionsArg with to_js(self : Self) -> JsValue {
+  identity(self.to_js())
+}
 
 ///|
 pub impl RemoveEventListenerOptionsArg for Bool
