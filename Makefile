@@ -1,7 +1,10 @@
-.PHONY: build fmt
+.PHONY: build fmt clean
 
 build:
-	NEW_MOON=1 moon build --target js
+	NEW_MOON=1 moon build --target wasm-gc
 
 fmt:
 	NEW_MOON=1 moon fmt
+
+clean:
+	NEW_MOON=1 moon clean

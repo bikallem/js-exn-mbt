@@ -1,4 +1,4 @@
-export const importObject = {
+export const wasmImportObject = {
     JsValue: {
         undefined: () => undefined,
         null: () => null,
@@ -18,9 +18,6 @@ export const importObject = {
         body: (document) => document.body,
         querySelector: (document, selector) => document.querySelector(selector),
     },
-    webapi_HTMLBodyElement: {
-        appendChild: (body, child) => body.appendChild(child),
-    },
     webapi_AddEventListenerOptions: {
         new: (capture, passive, once, signal) => ({ capture, passive, once, signal }),
     },
@@ -29,11 +26,18 @@ export const importObject = {
     },
     webapi_EventTarget: {
         addEventListener: (obj, type, listener, options) => obj.addEventListener(type, listener, options),
+        removeEventListener: (obj, type, listener, options) => obj.removeEventListener(type, listener, options),
     },
     webapi_EventListenerOptions: {
         new: (capture) => ({ capture }),
     },
     webapi_RemoveEventListenerOptionsArg: {
         removeEventListener: (obj, type, listener, options) => obj.removeEventListener(type, listener, options),
+    },
+    webapi_HTMLBodyElement: {
+        appendChild: (self, child) => self.appendChild(child)
+    },
+    console: {
+        log: (...args) => console.log(...args)
     },
 };

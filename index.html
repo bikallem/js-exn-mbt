@@ -11,7 +11,7 @@
 
 <body>
   <script type="module">
-    import { importObject } from "./ffi.mjs";
+    import { importObject } from "./web-api.mjs";
     Object.assign(globalThis, importObject);
   </script>
   <script type="module" src="target/js/release/build/js_exn_mbt.js"></script>
