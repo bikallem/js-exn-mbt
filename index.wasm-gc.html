@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
+  <link rel="shortcut icon" href="data:," />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Moonbit exn via js FFI</title>
   <style>
@@ -19,30 +20,6 @@
       }
     );
     main.instance.exports._start();
-    // try {
-    //   const response = await fetch("target/wasm-gc/release/build/js_exn_mbt.wasm");
-    //   const buffer = await response.arrayBuffer();
-    //   const module = await WebAssembly.compile(buffer);
-
-    //   // Provide webapi modules at root level, plus _ namespace for JS string builtins
-    //   const importObject = {
-    //     ...wasmImportObject,
-    //     _: {
-    //       "Button clicked!": "Button clicked!",
-    //       "Click me!": "Click me!",
-    //       "click": "click",
-    //       "Add click handler": "Add click handler",
-    //       "Remove click handler": "Remove click handler",
-    //       "Click once": "Click once",
-    //       "Button clicked once!": "Button clicked once!"
-    //     }
-    //   };
-
-    //   const instance = await WebAssembly.instantiate(module, importObject);
-    //   instance.exports._start();
-    // } catch (error) {
-    //   console.error("Error:", error);
-    // }
   </script>
 </body>
 

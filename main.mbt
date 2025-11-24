@@ -28,7 +28,7 @@ fn main {
   click_once_btn.add_event_listener(
     "click",
     cb(_ => println("Button clicked once!")),
-    options=add_event_listener_options(capture=true),
+    options=add_event_listener_options(once=true),
   )
   body.append_child(click_once_btn)
 }

@@ -3,7 +3,7 @@
 type Document
 
 ///|
-pub impl TJsValue for Document
+pub impl TJsValue for Document with to_js(self : Document) -> JsValue = "%identity"
 
 ///|
 pub fn Document::new() -> Document = "webapi_Document" "new"

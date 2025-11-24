@@ -19,13 +19,13 @@ pub trait TEventTarget: TJsValue {
 pub type EventTarget
 
 ///|
-pub impl TJsValue for EventTarget
+pub impl TJsValue for EventTarget with to_js(self : EventTarget) -> JsValue = "%identity"
 
 ///|
 pub impl TEventTarget for EventTarget
 
 ///|
-fn[A] identity(a : A) -> JsValue = "%identity"
+// fn[A] identity(a : A) -> JsValue = "%identity"
 
 //---------------------------------------------------------------------------------------------------------------------------------
 // undefined addEventListener(DOMString type, EventListener? callback, optional (AddEventListenerOptions or boolean) options = {});
@@ -34,48 +34,44 @@ fn[A] identity(a : A) -> JsValue = "%identity"
 ///|
 /// Arg: listener
 pub trait AddEventListenerListenerArg {
-  to_js(self : Self) -> JsValue = _
+  to_js(self : Self) -> JsValue
 }
 
 ///|
-impl AddEventListenerListenerArg with to_js(self : Self) -> JsValue {
-  identity(self.to_js())
-}
+pub impl AddEventListenerListenerArg for EventListener with to_js(
+  self : EventListener,
+) -> JsValue = "%identity"
 
 ///|
-pub(all) struct EventListener((Event) -> Unit)
+#external
+pub(all) type EventListener
 
 ///|
-pub fn cb(callback : (Event) -> Unit) -> EventListener {
-  EventListener(callback)
-}
+pub fn cb(callback : (Event) -> Unit) -> EventListener = "webapi_EventListener" "new"
 
 ///|
 pub impl AddEventListenerListenerArg for EventListener
 
 ///|
-pub impl AddEventListenerListenerArg for JsNull
+pub impl AddEventListenerListenerArg for JsNull with to_js(self : JsNull) -> JsValue = "%identity"
 
 ///|
 /// Arg : options
 pub trait AddEventListenerOptionsArg {
-  to_js(self : Self) -> JsValue = _
+  to_js(self : Self) -> JsValue
 }
 
 ///|
-impl AddEventListenerOptionsArg with to_js(self : Self) -> JsValue {
-  identity(self.to_js())
-}
-
-///|
-pub impl AddEventListenerOptionsArg for Bool
+pub impl AddEventListenerOptionsArg for Bool with to_js(self : Bool) -> JsValue = "%identity"
 
 ///|
 #external
 type AddEventListenerOptions
 
 ///|
-pub impl AddEventListenerOptionsArg for AddEventListenerOptions
+pub impl AddEventListenerOptionsArg for AddEventListenerOptions with to_js(
+  self : AddEventListenerOptions,
+) -> JsValue = "%identity"
 
 ///|
 fn add_event_listener_options_ffi(
@@ -131,40 +127,34 @@ impl TEventTarget with add_event_listener(
 ///|
 /// Arg: listener
 pub trait RemoveEventListenerListenerArg {
-  to_js(self : Self) -> JsValue = _
+  to_js(self : Self) -> JsValue
 }
 
 ///|
-impl RemoveEventListenerListenerArg with to_js(self : Self) -> JsValue {
-  identity(self.to_js())
-}
+pub impl RemoveEventListenerListenerArg for EventListener with to_js(
+  self : EventListener,
+) -> JsValue = "%identity"
 
 ///|
-pub impl RemoveEventListenerListenerArg for EventListener
-
-///|
-pub impl RemoveEventListenerListenerArg for JsNull
+pub impl RemoveEventListenerListenerArg for JsNull with to_js(self : JsNull) -> JsValue = "%identity"
 
 ///|
 /// Arg : options
 pub trait RemoveEventListenerOptionsArg {
-  to_js(self : Self) -> JsValue = _
+  to_js(self : Self) -> JsValue
 }
 
 ///|
-impl RemoveEventListenerOptionsArg with to_js(self : Self) -> JsValue {
-  identity(self.to_js())
-}
-
-///|
-pub impl RemoveEventListenerOptionsArg for Bool
+pub impl RemoveEventListenerOptionsArg for Bool with to_js(self : Bool) -> JsValue = "%identity"
 
 ///|
 #external
 type EventListenerOptions
 
 ///|
-pub impl RemoveEventListenerOptionsArg for EventListenerOptions
+pub impl RemoveEventListenerOptionsArg for EventListenerOptions with to_js(
+  self : EventListenerOptions,
+) -> JsValue = "%identity"
 
 ///|
 pub fn event_listener_options(capture? : Bool = false) -> EventListenerOptions = "webapi_EventListenerOptions" "new"

@@ -1,4 +1,7 @@
 export const wasmImportObject = {
+    "moonbit:ffi": {
+        "make_closure": (funcref, closure) => funcref.bind(null, closure)
+    },
     JsValue: {
         undefined: () => undefined,
         null: () => null,
@@ -23,6 +26,9 @@ export const wasmImportObject = {
     },
     webapi_Dictionary: {
         empty: () => ({}),
+    },
+    webapi_EventListener: {
+        new: (callback) => callback,
     },
     webapi_EventTarget: {
         addEventListener: (obj, type, listener, options) => obj.addEventListener(type, listener, options),

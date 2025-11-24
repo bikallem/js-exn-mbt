@@ -4,7 +4,7 @@ pub type JsValue
 
 ///|
 pub trait TJsValue {
-  to_js(Self) -> JsValue = _
+  to_js(Self) -> JsValue
 }
 
 ///|
@@ -14,11 +14,4 @@ pub fn JsValue::undefined() -> JsValue = "JsValue" "undefined"
 pub fn JsValue::null() -> JsValue = "JsValue" "null"
 
 ///|
-impl TJsValue with to_js(self : Self) -> JsValue {
-  identity(self.to_js())
-}
-
-///|
-pub impl TJsValue for Bool with to_js(self : Bool) -> JsValue {
-  identity(self)
-}
+pub impl TJsValue for Bool with to_js(self : Bool) -> JsValue = "%identity"

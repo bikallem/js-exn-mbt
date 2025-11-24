@@ -3,7 +3,7 @@
 type HTMLBodyElement
 
 ///|
-pub impl TJsValue for HTMLBodyElement
+pub impl TJsValue for HTMLBodyElement with to_js(self : HTMLBodyElement) -> JsValue = "%identity"
 
 ///|
 pub fn HTMLBodyElement::append_child(

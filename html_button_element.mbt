@@ -3,7 +3,7 @@
 type HTMLButtonElement
 
 ///|
-pub impl TJsValue for HTMLButtonElement
+pub impl TJsValue for HTMLButtonElement with to_js(self : HTMLButtonElement) -> JsValue = "%identity"
 
 ///|
 pub impl TEventTarget for HTMLButtonElement
