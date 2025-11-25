@@ -1,6 +1,5 @@
 ///|
 fn main {
-  let document = Document::new()
   let button = HTMLButtonElement::new("Click me!")
   let event_handler = cb(_ => println("Button clicked!"))
   button.add_event_listener("click", event_handler)
