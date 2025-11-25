@@ -2,66 +2,67 @@
 package "bikallem/js_exn_mbt"
 
 // Values
-fn add_event_listener_options(capture? : Bool, passive? : Bool, once? : Bool, signal? : AbortSignal) -> AddEventListenerOptions
+pub fn add_event_listener_options(capture? : Bool, passive? : Bool, once? : Bool, signal? : AbortSignal) -> AddEventListenerOptions
 
-fn cb((Event) -> Unit) -> EventListener
+pub fn cb((Event) -> Unit) -> EventListener
 
-fn default_event_listener_options() -> EventListenerOptions
+pub fn default_event_listener_options() -> EventListenerOptions
 
-fn event_listener_options(capture? : Bool) -> EventListenerOptions
+pub let document : Document
 
-fn remove_event_listener_ffi(JsValue, String, JsValue, JsValue) -> Unit
+pub fn event_listener_options(capture? : Bool) -> EventListenerOptions
+
+pub fn remove_event_listener_ffi(JsValue, String, JsValue, JsValue) -> Unit
 
 // Errors
 
 // Types and methods
 type AbortSignal
-impl TJsValue for AbortSignal
+pub impl TJsValue for AbortSignal
 
 type AddEventListenerOptions
-impl AddEventListenerOptionsArg for AddEventListenerOptions
+pub impl AddEventListenerOptionsArg for AddEventListenerOptions
 
 type Document
-fn Document::body(Self) -> HTMLBodyElement
-fn Document::new() -> Self
-fn Document::query_selector(Self, String) -> HTMLButtonElement
-impl TJsValue for Document
+pub fn Document::body(Self) -> HTMLBodyElement
+pub fn Document::query_selector(Self, String) -> HTMLButtonElement
+pub impl TJsValue for Document
 
 type Event
-impl TJsValue for Event
+pub impl TJsValue for Event
 
 #external
 pub(all) type EventListener
-impl AddEventListenerListenerArg for EventListener
-impl RemoveEventListenerListenerArg for EventListener
+pub impl AddEventListenerListenerArg for EventListener
+pub impl RemoveEventListenerListenerArg for EventListener
 
 type EventListenerOptions
-impl RemoveEventListenerOptionsArg for EventListenerOptions
+pub impl RemoveEventListenerOptionsArg for EventListenerOptions
 
 #external
 pub type EventTarget
-impl TEventTarget for EventTarget
-impl TJsValue for EventTarget
+pub impl TEventTarget for EventTarget
+pub impl TJsValue for EventTarget
 
 type HTMLBodyElement
-fn HTMLBodyElement::append_child(Self, HTMLButtonElement) -> Unit
-impl TJsValue for HTMLBodyElement
+pub fn HTMLBodyElement::append_child(Self, HTMLButtonElement) -> Unit
+pub impl TJsValue for HTMLBodyElement
 
 type HTMLButtonElement
-fn HTMLButtonElement::new(String) -> Self
-impl TEventTarget for HTMLButtonElement
-impl TJsValue for HTMLButtonElement
+pub fn HTMLButtonElement::new(String) -> Self
+pub impl TEventTarget for HTMLButtonElement
+pub impl TJsValue for HTMLButtonElement
 
 type JsNull
 #as_free_fn
-fn JsNull::null() -> Self
-impl AddEventListenerListenerArg for JsNull
-impl RemoveEventListenerListenerArg for JsNull
+pub fn JsNull::null() -> Self
+pub impl AddEventListenerListenerArg for JsNull
+pub impl RemoveEventListenerListenerArg for JsNull
 
 #external
 pub type JsValue
-fn JsValue::null() -> Self
-fn JsValue::undefined() -> Self
+pub fn JsValue::null() -> Self
+pub fn JsValue::undefined() -> Self
 
 // Type aliases
 
@@ -73,7 +74,7 @@ pub trait AddEventListenerListenerArg {
 pub trait AddEventListenerOptionsArg {
   to_js(Self) -> JsValue
 }
-impl AddEventListenerOptionsArg for Bool
+pub impl AddEventListenerOptionsArg for Bool
 
 pub trait RemoveEventListenerListenerArg {
   to_js(Self) -> JsValue
@@ -82,7 +83,7 @@ pub trait RemoveEventListenerListenerArg {
 pub trait RemoveEventListenerOptionsArg {
   to_js(Self) -> JsValue
 }
-impl RemoveEventListenerOptionsArg for Bool
+pub impl RemoveEventListenerOptionsArg for Bool
 
 pub trait TEventTarget : TJsValue {
   add_event_listener(Self, String, &AddEventListenerListenerArg, options? : &AddEventListenerOptionsArg) -> Unit
@@ -92,5 +93,5 @@ pub trait TEventTarget : TJsValue {
 pub trait TJsValue {
   to_js(Self) -> JsValue
 }
-impl TJsValue for Bool
+pub impl TJsValue for Bool
 
