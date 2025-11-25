@@ -30,16 +30,16 @@ pub impl TEventTarget for EventTarget
 
 ///|
 /// Arg: listener
-pub trait AddEventListenerListenerArg {
+trait AddEventListenerListenerArg {
   to_js(self : Self) -> JsValue
 }
 
 ///|
 #external
-pub(all) type EventListener
+type EventListener
 
 ///|
-pub impl AddEventListenerListenerArg for EventListener with to_js(
+impl AddEventListenerListenerArg for EventListener with to_js(
   self : EventListener,
 ) -> JsValue = "%identity"
 
@@ -51,7 +51,7 @@ pub impl AddEventListenerListenerArg for JsNull with to_js(self : JsNull) -> JsV
 
 ///|
 /// Arg : options
-pub trait AddEventListenerOptionsArg {
+trait AddEventListenerOptionsArg {
   to_js(self : Self) -> JsValue
 }
 
@@ -63,7 +63,7 @@ pub impl AddEventListenerOptionsArg for Bool with to_js(self : Bool) -> JsValue 
 type AddEventListenerOptions
 
 ///|
-pub impl AddEventListenerOptionsArg for AddEventListenerOptions with to_js(
+impl AddEventListenerOptionsArg for AddEventListenerOptions with to_js(
   self : AddEventListenerOptions,
 ) -> JsValue = "%identity"
 
@@ -90,7 +90,7 @@ pub fn add_event_listener_options(
 }
 
 ///|
-fn default_add_event_listener_options() -> AddEventListenerOptions = "webapi_Dictionary" "empty"
+pub fn default_add_event_listener_options() -> AddEventListenerOptions = "webapi_Dictionary" "empty"
 
 ///|
 fn add_event_listener_ffi(
@@ -120,12 +120,12 @@ impl TEventTarget with add_event_listener(
 
 ///|
 /// Arg: listener
-pub trait RemoveEventListenerListenerArg {
+trait RemoveEventListenerListenerArg {
   to_js(self : Self) -> JsValue
 }
 
 ///|
-pub impl RemoveEventListenerListenerArg for EventListener with to_js(
+impl RemoveEventListenerListenerArg for EventListener with to_js(
   self : EventListener,
 ) -> JsValue = "%identity"
 
@@ -134,7 +134,7 @@ pub impl RemoveEventListenerListenerArg for JsNull with to_js(self : JsNull) -> 
 
 ///|
 /// Arg : options
-pub trait RemoveEventListenerOptionsArg {
+trait RemoveEventListenerOptionsArg {
   to_js(self : Self) -> JsValue
 }
 
@@ -146,7 +146,7 @@ pub impl RemoveEventListenerOptionsArg for Bool with to_js(self : Bool) -> JsVal
 type EventListenerOptions
 
 ///|
-pub impl RemoveEventListenerOptionsArg for EventListenerOptions with to_js(
+impl RemoveEventListenerOptionsArg for EventListenerOptions with to_js(
   self : EventListenerOptions,
 ) -> JsValue = "%identity"
 

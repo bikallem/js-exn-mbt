@@ -6,6 +6,8 @@ pub fn add_event_listener_options(capture? : Bool, passive? : Bool, once? : Bool
 
 pub fn cb((Event) -> Unit) -> EventListener
 
+pub fn default_add_event_listener_options() -> AddEventListenerOptions
+
 pub fn default_event_listener_options() -> EventListenerOptions
 
 pub let document : Document
@@ -21,7 +23,6 @@ type AbortSignal
 pub impl TJsValue for AbortSignal
 
 type AddEventListenerOptions
-pub impl AddEventListenerOptionsArg for AddEventListenerOptions
 
 type Document
 pub fn Document::body(Self) -> HTMLBodyElement
@@ -31,13 +32,9 @@ pub impl TJsValue for Document
 type Event
 pub impl TJsValue for Event
 
-#external
-pub(all) type EventListener
-pub impl AddEventListenerListenerArg for EventListener
-pub impl RemoveEventListenerListenerArg for EventListener
+type EventListener
 
 type EventListenerOptions
-pub impl RemoveEventListenerOptionsArg for EventListenerOptions
 
 #external
 pub type EventTarget
@@ -67,22 +64,14 @@ pub fn JsValue::undefined() -> Self
 // Type aliases
 
 // Traits
-pub trait AddEventListenerListenerArg {
-  to_js(Self) -> JsValue
-}
+trait AddEventListenerListenerArg
 
-pub trait AddEventListenerOptionsArg {
-  to_js(Self) -> JsValue
-}
+trait AddEventListenerOptionsArg
 pub impl AddEventListenerOptionsArg for Bool
 
-pub trait RemoveEventListenerListenerArg {
-  to_js(Self) -> JsValue
-}
+trait RemoveEventListenerListenerArg
 
-pub trait RemoveEventListenerOptionsArg {
-  to_js(Self) -> JsValue
-}
+trait RemoveEventListenerOptionsArg
 pub impl RemoveEventListenerOptionsArg for Bool
 
 pub trait TEventTarget : TJsValue {
