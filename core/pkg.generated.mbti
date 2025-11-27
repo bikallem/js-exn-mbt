@@ -1,0 +1,40 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "bikallem/js_exn_mbt/core"
+
+// Values
+let document : Document
+
+// Errors
+
+// Types and methods
+type AbortSignal
+impl TJsValue for AbortSignal
+
+type Document
+fn Document::body(Self) -> HTMLBodyElement
+impl TJsValue for Document
+
+type Event
+impl TJsValue for Event
+
+type HTMLBodyElement
+fn[T : TJsValue] HTMLBodyElement::append_child(Self, T) -> Unit
+impl TJsValue for HTMLBodyElement
+
+type JsNull
+#as_free_fn
+fn JsNull::null() -> Self
+
+#external
+pub type JsValue
+fn JsValue::null() -> Self
+fn JsValue::undefined() -> Self
+
+// Type aliases
+
+// Traits
+pub(open) trait TJsValue {
+  to_js(Self) -> JsValue
+}
+impl TJsValue for Bool
+

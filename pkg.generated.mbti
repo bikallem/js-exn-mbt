@@ -2,85 +2,12 @@
 package "bikallem/js_exn_mbt"
 
 // Values
-pub fn add_event_listener_options(capture? : Bool, passive? : Bool, once? : Bool, signal? : AbortSignal) -> AddEventListenerOptions
-
-pub fn cb((Event) -> Unit) -> EventListener
-
-pub fn default_add_event_listener_options() -> AddEventListenerOptions
-
-pub fn default_event_listener_options() -> EventListenerOptions
-
-pub let document : Document
-
-pub fn event_listener_options(capture? : Bool) -> EventListenerOptions
-
-pub fn remove_event_listener_ffi(JsValue, String, JsValue, JsValue) -> Unit
 
 // Errors
 
 // Types and methods
-type AbortSignal
-pub impl TJsValue for AbortSignal
-
-type AddEventListenerOptions
-
-type Document
-pub fn Document::body(Self) -> HTMLBodyElement
-pub fn Document::query_selector(Self, String) -> HTMLButtonElement
-pub impl TJsValue for Document
-
-type Event
-pub impl TJsValue for Event
-
-type EventListener
-
-type EventListenerOptions
-
-#external
-pub type EventTarget
-pub impl TEventTarget for EventTarget
-pub impl TJsValue for EventTarget
-
-type HTMLBodyElement
-pub fn HTMLBodyElement::append_child(Self, HTMLButtonElement) -> Unit
-pub impl TJsValue for HTMLBodyElement
-
-type HTMLButtonElement
-pub fn HTMLButtonElement::new(String) -> Self
-pub impl TEventTarget for HTMLButtonElement
-pub impl TJsValue for HTMLButtonElement
-
-type JsNull
-#as_free_fn
-pub fn JsNull::null() -> Self
-pub impl AddEventListenerListenerArg for JsNull
-pub impl RemoveEventListenerListenerArg for JsNull
-
-#external
-pub type JsValue
-pub fn JsValue::null() -> Self
-pub fn JsValue::undefined() -> Self
 
 // Type aliases
 
 // Traits
-trait AddEventListenerListenerArg
-
-trait AddEventListenerOptionsArg
-pub impl AddEventListenerOptionsArg for Bool
-
-trait RemoveEventListenerListenerArg
-
-trait RemoveEventListenerOptionsArg
-pub impl RemoveEventListenerOptionsArg for Bool
-
-pub trait TEventTarget : TJsValue {
-  add_event_listener(Self, String, &AddEventListenerListenerArg, options? : &AddEventListenerOptionsArg) -> Unit
-  remove_event_listener(Self, String, &RemoveEventListenerListenerArg, options? : &RemoveEventListenerOptionsArg) -> Unit
-}
-
-pub trait TJsValue {
-  to_js(Self) -> JsValue
-}
-pub impl TJsValue for Bool
 

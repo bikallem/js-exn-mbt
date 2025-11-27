@@ -1,0 +1,65 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "bikallem/js_exn_mbt/trait"
+
+import(
+  "bikallem/js_exn_mbt/core"
+)
+
+// Values
+fn add_event_listener_options(capture? : Bool, passive? : Bool, once? : Bool, signal? : @core.AbortSignal) -> AddEventListenerOptions
+
+fn cb((Event) -> Unit) -> EventListener
+
+fn default_add_event_listener_options() -> AddEventListenerOptions
+
+fn default_event_listener_options() -> EventListenerOptions
+
+fn event_listener_options(capture? : Bool) -> EventListenerOptions
+
+fn remove_event_listener_ffi(@core.JsValue, String, @core.JsValue, @core.JsValue) -> Unit
+
+// Errors
+
+// Types and methods
+type AddEventListenerOptions
+impl AddEventListenerOptionsArg for AddEventListenerOptions
+
+type Event
+
+type EventListener
+impl AddEventListenerListenerArg for EventListener
+impl RemoveEventListenerListenerArg for EventListener
+
+type EventListenerOptions
+impl RemoveEventListenerOptionsArg for EventListenerOptions
+
+#external
+pub type EventTarget
+impl @core.TJsValue for EventTarget
+impl TEventTarget for EventTarget
+
+type HTMLButtonElement
+fn HTMLButtonElement::new(String) -> Self
+impl @core.TJsValue for HTMLButtonElement
+impl TEventTarget for HTMLButtonElement
+
+// Type aliases
+
+// Traits
+trait AddEventListenerListenerArg
+impl AddEventListenerListenerArg for @core.JsNull
+
+trait AddEventListenerOptionsArg
+impl AddEventListenerOptionsArg for Bool
+
+trait RemoveEventListenerListenerArg
+impl RemoveEventListenerListenerArg for @core.JsNull
+
+trait RemoveEventListenerOptionsArg
+impl RemoveEventListenerOptionsArg for Bool
+
+pub trait TEventTarget : @core.TJsValue {
+  add_event_listener(Self, String, &AddEventListenerListenerArg, options? : &AddEventListenerOptionsArg) -> Unit
+  remove_event_listener(Self, String, &RemoveEventListenerListenerArg, options? : &RemoveEventListenerOptionsArg) -> Unit
+}
+
