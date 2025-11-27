@@ -1,5 +1,5 @@
 ///|
-pub trait TEventTarget: TJsValue {
+pub trait TEventTarget: @core.TJsValue {
   add_event_listener(
     self : Self,
     type_ : String,
@@ -19,7 +19,7 @@ pub trait TEventTarget: TJsValue {
 pub type EventTarget
 
 ///|
-pub impl TJsValue for EventTarget with to_js(self : EventTarget) -> JsValue = "%identity"
+pub impl @core.TJsValue for EventTarget with to_js(self : EventTarget) -> JsValue = "%identity"
 
 ///|
 pub impl TEventTarget for EventTarget
@@ -39,7 +39,7 @@ trait AddEventListenerListenerArg {
 type EventListener
 
 ///|
-impl AddEventListenerListenerArg for EventListener with to_js(
+pub impl AddEventListenerListenerArg for EventListener with to_js(
   self : EventListener,
 ) -> JsValue = "%identity"
 
@@ -63,7 +63,7 @@ pub impl AddEventListenerOptionsArg for Bool with to_js(self : Bool) -> JsValue 
 type AddEventListenerOptions
 
 ///|
-impl AddEventListenerOptionsArg for AddEventListenerOptions with to_js(
+pub impl AddEventListenerOptionsArg for AddEventListenerOptions with to_js(
   self : AddEventListenerOptions,
 ) -> JsValue = "%identity"
 
@@ -125,7 +125,7 @@ trait RemoveEventListenerListenerArg {
 }
 
 ///|
-impl RemoveEventListenerListenerArg for EventListener with to_js(
+pub impl RemoveEventListenerListenerArg for EventListener with to_js(
   self : EventListener,
 ) -> JsValue = "%identity"
 
@@ -146,7 +146,7 @@ pub impl RemoveEventListenerOptionsArg for Bool with to_js(self : Bool) -> JsVal
 type EventListenerOptions
 
 ///|
-impl RemoveEventListenerOptionsArg for EventListenerOptions with to_js(
+pub impl RemoveEventListenerOptionsArg for EventListenerOptions with to_js(
   self : EventListenerOptions,
 ) -> JsValue = "%identity"
 

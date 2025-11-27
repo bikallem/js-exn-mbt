@@ -1,4 +1,13 @@
 ///|
+using @core {document}
+
+///|
+using @trait {type HTMLButtonElement, cb}
+
+///|
+using @trait {add_event_listener_options}
+
+///|
 fn main {
   let button = HTMLButtonElement::new("Click me!")
   let event_handler = cb(_ => println("Button clicked!"))

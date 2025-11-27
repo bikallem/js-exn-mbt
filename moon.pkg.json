@@ -1,5 +1,9 @@
 {
     "is-main": true,
+    "import": [
+        "bikallem/js_exn_mbt/core",
+        "bikallem/js_exn_mbt/trait"
+    ],
     "supported-targets": [
         "js",
         "wasm-gc"

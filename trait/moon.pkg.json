@@ -1,0 +1,5 @@
+{
+    "import": [
+        "bikallem/js_exn_mbt/core"
+    ]
+}
