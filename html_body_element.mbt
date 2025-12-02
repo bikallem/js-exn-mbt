@@ -1,6 +1,6 @@
 ///|
 #external
-type HTMLBodyElement
+pub type HTMLBodyElement
 
 ///|
 pub impl TJsValue for HTMLBodyElement with to_js(self : HTMLBodyElement) -> JsValue = "%identity"

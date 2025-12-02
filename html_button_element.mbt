@@ -1,6 +1,6 @@
 ///|
 #external
-type HTMLButtonElement
+pub type HTMLButtonElement
 
 ///|
 pub impl TJsValue for HTMLButtonElement with to_js(self : HTMLButtonElement) -> JsValue = "%identity"

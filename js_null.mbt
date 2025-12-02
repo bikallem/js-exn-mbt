@@ -1,6 +1,6 @@
 ///|
 #external
-type JsNull
+pub type JsNull
 
 ///|
 #as_free_fn
