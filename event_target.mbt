@@ -40,9 +40,6 @@ impl AddEventListenerListenerArg for EventListener with to_js(
 ) -> JsValue = "%identity"
 
 ///|
-pub fn cb(callback : (Event) -> Unit) -> EventListener = "webapi_EventListener" "new"
-
-///|
 pub impl AddEventListenerListenerArg for JsNull with to_js(self : JsNull) -> JsValue = "%identity"
 
 ///|
