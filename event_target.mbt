@@ -3,13 +3,13 @@ pub trait TEventTarget: TJsValue {
   add_event_listener(
     self : Self,
     type_ : String,
-    listener : &AddEventListenerListenerArg,
+    callback : &AddEventListenerCallbackArg,
     options? : &AddEventListenerOptionsArg,
   ) -> Unit = _
   remove_event_listener(
     self : Self,
     type_ : String,
-    listener : &RemoveEventListenerListenerArg,
+    callback : &RemoveEventListenerCallbackArg,
     options? : &RemoveEventListenerOptionsArg,
   ) -> Unit = _
 }
@@ -29,18 +29,18 @@ pub impl TEventTarget for EventTarget
 //---------------------------------------------------------------------------------------------------------------------------------
 
 ///|
-/// Arg: listener
-trait AddEventListenerListenerArg {
+/// Arg: callback
+trait AddEventListenerCallbackArg {
   to_js(self : Self) -> JsValue
 }
 
 ///|
-impl AddEventListenerListenerArg for EventListener with to_js(
+impl AddEventListenerCallbackArg for EventListener with to_js(
   self : EventListener,
 ) -> JsValue = "%identity"
 
 ///|
-pub impl AddEventListenerListenerArg for JsNull with to_js(self : JsNull) -> JsValue = "%identity"
+pub impl AddEventListenerCallbackArg for JsNull with to_js(self : JsNull) -> JsValue = "%identity"
 
 ///|
 /// Arg : options
@@ -97,14 +97,14 @@ fn add_event_listener_ffi(
 impl TEventTarget with add_event_listener(
   self : Self,
   type_ : String,
-  listener : &AddEventListenerListenerArg,
+  callback : &AddEventListenerCallbackArg,
   options? : &AddEventListenerOptionsArg,
 ) -> Unit {
   let options = match options {
     Some(options) => options.to_js()
     None => default_add_event_listener_options().to_js()
   }
-  add_event_listener_ffi(self.to_js(), type_, listener.to_js(), options)
+  add_event_listener_ffi(self.to_js(), type_, callback.to_js(), options)
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------
@@ -113,17 +113,17 @@ impl TEventTarget with add_event_listener(
 
 ///|
 /// Arg: listener
-trait RemoveEventListenerListenerArg {
+trait RemoveEventListenerCallbackArg {
   to_js(self : Self) -> JsValue
 }
 
 ///|
-impl RemoveEventListenerListenerArg for EventListener with to_js(
+impl RemoveEventListenerCallbackArg for EventListener with to_js(
   self : EventListener,
 ) -> JsValue = "%identity"
 
 ///|
-pub impl RemoveEventListenerListenerArg for JsNull with to_js(self : JsNull) -> JsValue = "%identity"
+pub impl RemoveEventListenerCallbackArg for JsNull with to_js(self : JsNull) -> JsValue = "%identity"
 
 ///|
 /// Arg : options
@@ -153,7 +153,7 @@ pub fn default_event_listener_options() -> EventListenerOptions = "webapi_Dictio
 pub fn remove_event_listener_ffi(
   obj : JsValue,
   type_ : String,
-  listener : JsValue,
+  callback : JsValue,
   options : JsValue,
 ) -> Unit = "webapi_EventTarget" "removeEventListener"
 
@@ -161,12 +161,12 @@ pub fn remove_event_listener_ffi(
 impl TEventTarget with remove_event_listener(
   self : Self,
   type_ : String,
-  listener : &RemoveEventListenerListenerArg,
+  callback : &RemoveEventListenerCallbackArg,
   options? : &RemoveEventListenerOptionsArg,
 ) -> Unit {
   let options = match options {
     Some(options) => options.to_js()
     None => default_event_listener_options().to_js()
   }
-  remove_event_listener_ffi(self.to_js(), type_, listener.to_js(), options)
+  remove_event_listener_ffi(self.to_js(), type_, callback.to_js(), options)
 }
