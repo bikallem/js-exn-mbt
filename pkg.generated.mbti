@@ -19,20 +19,24 @@ pub fn remove_event_listener_ffi(JsValue, String, JsValue, JsValue) -> Unit
 // Errors
 
 // Types and methods
-type AbortSignal
+#external
+pub type AbortSignal
 pub impl TJsValue for AbortSignal
 
 type AddEventListenerOptions
 
-type Document
+#external
+pub type Document
 pub fn Document::body(Self) -> HTMLBodyElement
 pub fn Document::query_selector(Self, String) -> HTMLButtonElement
 pub impl TJsValue for Document
 
-type Event
+#external
+pub type Event
 pub impl TJsValue for Event
 
-type EventListener
+#external
+pub type EventListener
 
 type EventListenerOptions
 
@@ -41,16 +45,19 @@ pub type EventTarget
 pub impl TEventTarget for EventTarget
 pub impl TJsValue for EventTarget
 
-type HTMLBodyElement
+#external
+pub type HTMLBodyElement
 pub fn HTMLBodyElement::append_child(Self, HTMLButtonElement) -> Unit
 pub impl TJsValue for HTMLBodyElement
 
-type HTMLButtonElement
+#external
+pub type HTMLButtonElement
 pub fn HTMLButtonElement::new(String) -> Self
 pub impl TEventTarget for HTMLButtonElement
 pub impl TJsValue for HTMLButtonElement
 
-type JsNull
+#external
+pub type JsNull
 #as_free_fn
 pub fn JsNull::null() -> Self
 pub impl AddEventListenerListenerArg for JsNull
