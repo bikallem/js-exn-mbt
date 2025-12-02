@@ -3,4 +3,4 @@
 pub type EventListener
 
 ///|
-pub fn cb(callback : (Event) -> Unit) -> EventListener = "webapi_EventListener" "new"
+pub fn event_listener(callback : (Event) -> Unit) -> EventListener = "webapi_EventListener" "new"
