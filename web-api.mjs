@@ -43,7 +43,4 @@ export const wasmImportObject = {
     webapi_HTMLBodyElement: {
         appendChild: (self, child) => self.appendChild(child)
     },
-    console: {
-        log: (...args) => console.log(...args)
-    },
 };
