@@ -35,10 +35,6 @@ trait AddEventListenerListenerArg {
 }
 
 ///|
-#external
-type EventListener
-
-///|
 impl AddEventListenerListenerArg for EventListener with to_js(
   self : EventListener,
 ) -> JsValue = "%identity"
