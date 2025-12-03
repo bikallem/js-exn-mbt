@@ -56,13 +56,9 @@ pub impl TEventTarget for HTMLButtonElement
 pub impl TJsValue for HTMLButtonElement
 
 #external
-pub type JsNull
-#as_free_fn(null)
-pub fn[T] JsNull::null() -> T
-
-#external
 pub type JsValue
-pub fn JsValue::null() -> Self
+#as_free_fn(null)
+pub fn[T] JsValue::null() -> T
 pub fn JsValue::undefined() -> Self
 
 // Type aliases
