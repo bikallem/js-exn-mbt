@@ -4,8 +4,6 @@ package "bikallem/js_exn_mbt"
 // Values
 pub fn add_event_listener_options(capture? : Bool, passive? : Bool, once? : Bool, signal? : AbortSignal) -> AddEventListenerOptions
 
-pub fn cb((Event) -> Unit) -> EventListener
-
 pub fn default_add_event_listener_options() -> AddEventListenerOptions
 
 pub fn default_event_listener_options() -> EventListenerOptions
@@ -14,7 +12,7 @@ pub let document : Document
 
 pub fn event_listener_options(capture? : Bool) -> EventListenerOptions
 
-pub fn remove_event_listener_ffi(JsValue, String, JsValue, JsValue) -> Unit
+pub fn remove_event_listener_ffi(JsValue, String, EventListener, JsValue) -> Unit
 
 // Errors
 
@@ -37,6 +35,8 @@ pub impl TJsValue for Event
 
 #external
 pub type EventListener
+pub fn EventListener::new((Event) -> Unit) -> Self
+pub fn EventListener::null() -> Self
 
 type EventListenerOptions
 
@@ -60,8 +60,6 @@ pub impl TJsValue for HTMLButtonElement
 pub type JsNull
 #as_free_fn
 pub fn JsNull::null() -> Self
-pub impl AddEventListenerListenerArg for JsNull
-pub impl RemoveEventListenerListenerArg for JsNull
 
 #external
 pub type JsValue
@@ -71,23 +69,19 @@ pub fn JsValue::undefined() -> Self
 // Type aliases
 
 // Traits
-trait AddEventListenerListenerArg
-
-trait AddEventListenerOptionsArg
-pub impl AddEventListenerOptionsArg for Bool
-
-trait RemoveEventListenerListenerArg
-
-trait RemoveEventListenerOptionsArg
-pub impl RemoveEventListenerOptionsArg for Bool
+trait TAddEventListenerOptionsArg
+pub impl TAddEventListenerOptionsArg for Bool
 
 pub trait TEventTarget : TJsValue {
-  add_event_listener(Self, String, &AddEventListenerListenerArg, options? : &AddEventListenerOptionsArg) -> Unit
-  remove_event_listener(Self, String, &RemoveEventListenerListenerArg, options? : &RemoveEventListenerOptionsArg) -> Unit
+  add_event_listener(Self, String, EventListener, options? : &TAddEventListenerOptionsArg) -> Unit
+  remove_event_listener(Self, String, EventListener, options? : &TRemoveEventListenerOptionsArg) -> Unit
 }
 
 pub trait TJsValue {
   to_js(Self) -> JsValue
 }
 pub impl TJsValue for Bool
+
+trait TRemoveEventListenerOptionsArg
+pub impl TRemoveEventListenerOptionsArg for Bool
 
