@@ -36,7 +36,6 @@ pub impl TJsValue for Event
 #external
 pub type EventListener
 pub fn EventListener::new((Event) -> Unit) -> Self
-pub fn EventListener::null() -> Self
 
 type EventListenerOptions
 
@@ -58,8 +57,8 @@ pub impl TJsValue for HTMLButtonElement
 
 #external
 pub type JsNull
-#as_free_fn
-pub fn JsNull::null() -> Self
+#as_free_fn(null)
+pub fn[T] JsNull::null() -> T
 
 #external
 pub type JsValue
