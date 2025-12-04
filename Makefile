@@ -1,7 +1,7 @@
 .PHONY: build fmt clean
 
 build:
-	NEW_MOON=1 moon build --target js
+	NEW_MOON=1 moon build
 
 fmt:
 	NEW_MOON=1 moon fmt
