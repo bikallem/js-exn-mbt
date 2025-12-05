@@ -21,11 +21,12 @@
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
             wabt # WebAssembly Binary Toolkit (wasm-objdump, wasm2wat, etc.)
+            wasm-tools # Rust Wasm tools with GC support (wasm-tools print)
           ];
 
           shellHook = ''
             echo "WebAssembly development environment loaded"
-            echo "Available tools: wasm-objdump, wasm2wat, wat2wasm, wasm-validate"
+            echo "Available tools: wasm-objdump, wasm2wat, wat2wasm, wasm-validate, wasm-tools"
           '';
         };
       }
