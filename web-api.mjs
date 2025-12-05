@@ -1,7 +1,4 @@
 export const wasmImportObject = {
-    "moonbit:ffi": {
-        "make_closure": (funcref, closure) => funcref.bind(null, closure)
-    },
     JsValue: {
         undefined: () => undefined,
         null: () => null,

@@ -13,7 +13,18 @@
 <body>
   <script type="module">
     import { wasmImportObject } from "./web-api.mjs";
-    const main = await WebAssembly.instantiateStreaming(fetch("target/wasm-gc/release/build/js_exn_mbt.wasm"), wasmImportObject,
+
+    const imports = {
+      "moonbit:ffi": {
+        "make_closure": (funcref, closure) => funcref.bind(null, closure)
+      },
+      console: {
+        log: (msg) => console.log(msg),
+      },
+      ...wasmImportObject
+    };
+
+    const main = await WebAssembly.instantiateStreaming(fetch("target/wasm-gc/release/build/js_exn_mbt.wasm"), imports,
       {
         builtins: ["js-string"],
         importedStringConstants: "_",
