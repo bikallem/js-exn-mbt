@@ -12,7 +12,7 @@ pub let document : Document
 
 pub fn event_listener_options(capture? : Bool) -> EventListenerOptions
 
-pub fn remove_event_listener_ffi(JsValue, String, (Event) -> Unit, JsValue) -> Unit
+pub fn remove_event_listener_ffi(JsValue, String, EventListener, JsValue) -> Unit
 
 // Errors
 
@@ -32,6 +32,13 @@ pub impl TJsValue for Document
 #external
 pub type Event
 pub impl TJsValue for Event
+
+#external
+pub type EventListener
+#as_free_fn(event_listener)
+pub fn EventListener::new((Event) -> Unit) -> Self
+pub fn EventListener::null() -> Self
+pub impl TJsValue for EventListener
 
 type EventListenerOptions
 
@@ -58,15 +65,14 @@ pub fn[T] JsValue::null() -> T
 pub fn JsValue::undefined() -> Self
 
 // Type aliases
-pub type EventListener = (Event) -> Unit
 
 // Traits
 trait TAddEventListenerOptionsArg
 pub impl TAddEventListenerOptionsArg for Bool
 
 pub trait TEventTarget : TJsValue {
-  add_event_listener(Self, String, (Event) -> Unit, options? : &TAddEventListenerOptionsArg) -> Unit
-  remove_event_listener(Self, String, (Event) -> Unit, options? : &TRemoveEventListenerOptionsArg) -> Unit
+  add_event_listener(Self, String, EventListener, options? : &TAddEventListenerOptionsArg) -> Unit
+  remove_event_listener(Self, String, EventListener, options? : &TRemoveEventListenerOptionsArg) -> Unit
 }
 
 pub trait TJsValue {
