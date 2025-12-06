@@ -8,15 +8,18 @@ pub(open) trait TJsValue {
 }
 
 ///|
-
-///|
 #cfg(target="wasm-gc")
-pub fn JsValue::undefined() -> JsValue = "JsValue" "undefined"
+fn undefined_ffi() -> JsValue = "JsValue" "undefined"
 
 ///|
 #cfg(target="js")
-extern "js" pub fn JsValue::undefined() -> JsValue =
+extern "js" fn undefined_ffi() -> JsValue =
   #| () => undefined
+
+///|
+pub fn JsValue::undefined() -> JsValue {
+  undefined_ffi()
+}
 
 ///|
 
