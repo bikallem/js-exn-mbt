@@ -3,12 +3,5 @@
         "js",
         "wasm-gc"
     ],
-    "targets": {
-        "event_target.js.mbt": [
-            "js"
-        ],
-        "event_target.wasm-gc.mbt": [
-            "wasm-gc"
-        ]
-    }
+    "targets": {}
 }
