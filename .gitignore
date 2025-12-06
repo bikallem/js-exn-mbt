@@ -1,0 +1,16 @@
+# Devenv
+.direnv/
+
+# moonbit
+target/
+.mooncakes/
+.DS_Store
+
+# Logs
+logs
+
+# npm
+node_modules
+dist
+
+apps/target
