@@ -57,19 +57,62 @@ pub fn add_event_listener_options(
     Some(signal) => signal.to_js()
     None => JsValue::undefined()
   }
-  add_event_listener_options_ffi(capture, passive, once, signal)
+  AddEventListenerOptions::new_ffi(capture, passive, once, signal)
 }
 
 ///|
-pub fn default_add_event_listener_options() -> AddEventListenerOptions = "webapi_Dictionary" "empty"
+#cfg(target="wasm-gc")
+fn AddEventListenerOptions::new_ffi(
+  capture : Bool,
+  passive : Bool,
+  once : Bool,
+  signal : JsValue,
+) -> AddEventListenerOptions = "webapi_AddEventListenerOptions" "new"
 
 ///|
-fn add_event_listener_ffi(
-  obj : JsValue,
+#cfg(target="js")
+extern "js" fn AddEventListenerOptions::new_ffi(
+  capture : Bool,
+  passive : Bool,
+  once : Bool,
+  signal : JsValue,
+) -> AddEventListenerOptions =
+  #| (capture, passive, once, signal) => ({ capture, passive, once, signal })
+
+///|
+#cfg(target="wasm-gc")
+fn AddEventListenerOptions::default_ffi() -> AddEventListenerOptions = "webapi_Dictionary" "empty"
+
+///|
+#cfg(target="js")
+extern "js" fn AddEventListenerOptions::default_ffi() -> AddEventListenerOptions =
+  #| () => ({})
+
+///|
+pub fn default_add_event_listener_options() -> AddEventListenerOptions {
+  AddEventListenerOptions::default_ffi()
+}
+
+///|
+
+///|
+#cfg(target="wasm-gc")
+fn JsValue::add_event_listener_ffi(
+  self : JsValue,
   type_ : String,
   listener : EventListener,
   options : JsValue,
 ) -> Unit = "webapi_EventTarget" "addEventListener"
+
+///|
+#cfg(target="js")
+extern "js" fn JsValue::add_event_listener_ffi(
+  self : JsValue,
+  type_ : String,
+  listener : EventListener,
+  options : JsValue,
+) -> Unit =
+  #| (self, type_, listener, options) => self.addEventListener(type_, listener, options)
 
 ///|
 impl TEventTarget with add_event_listener(
@@ -82,7 +125,7 @@ impl TEventTarget with add_event_listener(
     Some(options) => options.to_js()
     None => default_add_event_listener_options().to_js()
   }
-  add_event_listener_ffi(self.to_js(), type_, callback, options)
+  self.to_js().add_event_listener_ffi(type_, callback, options)
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------
@@ -108,10 +151,61 @@ pub impl TRemoveEventListenerOptionsArg for EventListenerOptions with to_js(
 ) -> JsValue = "%identity"
 
 ///|
-pub fn event_listener_options(capture? : Bool = false) -> EventListenerOptions = "webapi_EventListenerOptions" "new"
 
 ///|
-pub fn default_event_listener_options() -> EventListenerOptions = "webapi_Dictionary" "empty"
+#cfg(target="wasm-gc")
+fn EventListenerOptions::new_ffi(
+  capture? : Bool = false,
+) -> EventListenerOptions = "webapi_EventListenerOptions" "new"
+
+///|
+#cfg(target="js")
+extern "js" fn EventListenerOptions::new_ffi(
+  capture? : Bool = false,
+) -> EventListenerOptions =
+  #| (capture) => ({ capture })
+
+///|
+pub fn event_listener_options(capture? : Bool = false) -> EventListenerOptions {
+  EventListenerOptions::new_ffi(capture~)
+}
+
+///|
+
+///|
+#cfg(target="wasm-gc")
+fn EventListenerOptions::default_ffi() -> EventListenerOptions = "webapi_Dictionary" "empty"
+
+///|
+#cfg(target="js")
+extern "js" fn EventListenerOptions::default_ffi() -> EventListenerOptions =
+  #| () => ({})
+
+///|
+pub fn default_event_listener_options() -> EventListenerOptions {
+  EventListenerOptions::default_ffi()
+}
+
+///|
+
+///|
+#cfg(target="wasm-gc")
+fn JsValue::remove_event_listener_ffi(
+  self : JsValue,
+  type_ : String,
+  callback : EventListener,
+  options : JsValue,
+) -> Unit = "webapi_EventTarget" "removeEventListener"
+
+///|
+#cfg(target="js")
+extern "js" fn JsValue::remove_event_listener_ffi(
+  self : JsValue,
+  type_ : String,
+  callback : EventListener,
+  options : JsValue,
+) -> Unit =
+  #| (self, type_, listener, options) => self.removeEventListener(type_, listener, options)
 
 ///|
 pub fn remove_event_listener_ffi(
@@ -119,7 +213,9 @@ pub fn remove_event_listener_ffi(
   type_ : String,
   callback : EventListener,
   options : JsValue,
-) -> Unit = "webapi_EventTarget" "removeEventListener"
+) -> Unit {
+  obj.remove_event_listener_ffi(type_, callback, options)
+}
 
 ///|
 impl TEventTarget with remove_event_listener(
@@ -132,5 +228,5 @@ impl TEventTarget with remove_event_listener(
     Some(options) => options.to_js()
     None => default_event_listener_options().to_js()
   }
-  remove_event_listener_ffi(self.to_js(), type_, callback, options)
+  self.to_js().remove_event_listener_ffi(type_, callback, options)
 }
