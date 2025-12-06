@@ -8,10 +8,26 @@ pub(open) trait TJsValue {
 }
 
 ///|
+
+///|
+#cfg(target="wasm-gc")
 pub fn JsValue::undefined() -> JsValue = "JsValue" "undefined"
 
 ///|
+#cfg(target="js")
+extern "js" pub fn JsValue::undefined() -> JsValue =
+  #| () => undefined
+
+///|
+
+///|
+#cfg(target="wasm-gc")
 fn null_ffi() -> JsValue = "JsNull" "null"
+
+///|
+#cfg(target="js")
+extern "js" fn null_ffi() -> JsValue =
+  #| () => null
 
 ///|
 fn[T] cast(value : JsValue) -> T = "%identity"
