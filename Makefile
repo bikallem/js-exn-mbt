@@ -1,15 +1,15 @@
-.PHONY: build fmt clean all
+.PHONY: build fmt clean all info
 
 all: clean fmt info build
 
 build:
-	NEW_MOON=1 moon build
+	moon build
 
 fmt:
-	NEW_MOON=1 moon fmt
+	moon fmt
 
 clean:
-	NEW_MOON=1 moon clean
+	moon clean
 
 info:
-	NEW_MOON=1 moon info
+	moon info
