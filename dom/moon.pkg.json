@@ -9,12 +9,6 @@
         ],
         "event_target.wasm-gc.mbt": [
             "wasm-gc"
-        ],
-        "document.js.mbt": [
-            "js"
-        ],
-        "document.wasm-gc.mbt": [
-            "wasm-gc"
         ]
     }
 }

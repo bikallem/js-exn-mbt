@@ -27,6 +27,7 @@ pub impl TAddEventListenerOptionsArg for AddEventListenerOptions
 #external
 pub type Document
 pub fn Document::body(Self) -> HTMLBodyElement
+pub fn Document::document() -> Self
 pub fn Document::query_selector(Self, String) -> HTMLButtonElement
 pub impl TJsValue for Document
 
