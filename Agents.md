@@ -8,14 +8,52 @@ the top-level of a MoonBit project there is a `moon.mod.json` file specifying
 the metadata of the project. The project may contain multiple packages, each
 with its own `moon.pkg.json` file.
 
-Here is some typical project layouts you may encounter:
+Here are some typical project layouts you may encounter:
 
 - **Module**: When you see a `moon.mod.json` file in the project directory, you
   are already in a MoonBit project.
+  A MoonBit *module* is like a Go module.
+  It is a collection of packages, usually corresponding to a repository or project.
+  Module boundaries matter for dependency management and import paths.
+  A module contains many packages in subdirectories.
+
 - **Package**: When you see a `moon.pkg.json` file, but not a `moon.mod.json`
   file, it means you are in a MoonBit package. All subcommands of `moon` will
   still be executed in the directory of the module (where `moon.mod.json` is
   located), not the current package.
+  A MoonBit *package* is the actual compilation unit (like a Go package).
+  All source files in the same package are concatenated into one unit.
+  The `package` name in the source defines the package, not the file name.
+  Imports refer to module + package paths, NEVER to file names.
+
+- **Files**:
+  A `.mbt` file is just a chunk of source inside a package.
+  File names do NOT create modules or namespaces.
+  You may freely split/merge/move declarations between files in the same package.
+  Any declaration in a package can reference any other declaration in that package, regardless of file.
+
+## Coding/layout rules you MUST follow:
+
+1. Prefer many small, cohesive files over one large file.
+   - Group related types and functions into focused files (e.g. http_client.mbt, router.mbt).
+   - If a file is getting large or unfocused, create a new file and move related declarations into it.
+
+2. You MAY freely move declarations between files inside the same package.
+   - Moving a function/struct/trait between files does not change semantics, as long as its name and pub-ness stay the same.
+   - It is safe to refactor by splitting or merging files inside a package.
+
+3. File names are purely organizational.
+   - Do NOT assume file names define modules, and do NOT use file names in type paths.
+   - Choose file names to describe a feature or responsibility, not to mirror type names rigidly.
+
+4. When adding new code:
+   - Prefer adding it to an existing file that matches the feature.
+   - If no good file exists, create a new file under the same package with a descriptive name.
+   - Avoid creating giant “misc” or “util” files.
+
+5. Tests:
+   - Place tests in dedicated test files (e.g. *_test.mbt) within the appropriate package.
+   - It is fine—and encouraged—to have multiple small test files.
 
 ## `.mbti` Files - Package Interface Documentation
 
@@ -27,19 +65,23 @@ MoonBit interface files (`pkg.generated.mbti`) are compiler-generated summaries 
 $ tree -P '*.mbti' -I 'internal' --prune ~/.moon/lib/core # ignore internal packages
 /Users/username/.moon/lib/core
 ├── builtin
-│   └── pkg.generated.mbti
+│   └── pkg.generated.mbti
 ├── array
-│   └── pkg.generated.mbti
+│   └── pkg.generated.mbti
 ├── bench
-│   └── pkg.generated.mbti
+│   └── pkg.generated.mbti
 ├── bigint
-│   └── pkg.generated.mbti
+│   └── pkg.generated.mbti
 ├── bool
-│   └── pkg.generated.mbti
+│   └── pkg.generated.mbti
 ├── buffer
-│   └── pkg.generated.mbti
+│   └── pkg.generated.mbti
 .....
 ```
+
+**When to use each approach**:
+- Use `moon doc` for interactive API discovery (preferred, see "API Discovery with `moon doc`" section below)
+- Read `.mbti` files directly when you need the complete API surface at once or when working offline
 
 **Reading `.mbti` files for API discovery**:
 - **Start with `builtin/pkg.generated.mbti`** - contains core types (String, Int, Array, etc.) and their fundamental APIs
@@ -67,7 +109,8 @@ Core facts that impact how you write and refactor code.
 
 Quick reference:
 
-```moonbit
+```mbt check
+
 ///|
 /// comments doc string
 pub fn sum(x : Int, y : Int) -> Int {
@@ -206,101 +249,84 @@ test "inspect test" {
 MoonBit supports Byte, Int16, Int, UInt16, UInt, Int64, UInt64, etc. When the type is known,
 the literal can be overloaded:
 
-```moonbit
-///|
-test "int and char literal" {
-  let a0 = 1 // a is Int by default
-  let (int, uint, uint16, int64, byte) : (Int, UInt, UInt16, Int64, Byte) = (
-    1, 1, 1, 1, 1,
-  )
-  assert_eq(int, uint16.to_int())
-  // when the type is known, the literal can be overloaded
-  let a1 : Int = 'b' // this also works, a5 will be the unicode value
-  let a2 : Char = 'b'
-
-}
+```mbt test
+let a0 = 1 // a is Int by default
+let (int, uint, uint16, int64, byte) : (Int, UInt, UInt16, Int64, Byte) = (
+  1, 1, 1, 1, 1,
+)
+assert_eq(int, uint16.to_int())
+// when the type is known, the literal can be overloaded
+let a1 : Int = 'b' // this also works, a5 will be the unicode value
+let a2 : Char = 'b'
 ```
 ## Bytes
 
 Bytes is immutable; Indexing (`b[i]`) returns a `Byte`.
 
-```moonbit
-///|
-test "bytes literal" {
-  let b0 : Bytes = b"abcd"
-  let b1 : Bytes = "abcd" // b" prefix is optional, when we know the type
-  let b2 : Bytes = [0xff, 0x00, 0x01] // Array literal overloading
-  assert_eq(b0[0], b'a') // indexing returns Byte
-}
+```mbt test
+let b0 : Bytes = b"abcd"
+let b1 : Bytes = "abcd" // b" prefix is optional, when we know the type
+let b2 : Bytes = [0xff, 0x00, 0x01] // Array literal overloading
+assert_eq(b0[0], b'a') // indexing returns Byte
 ```
 ## Array
 
 MoonBit Array is resizable array, FixedArray is fixed size array.
 
-```moonbit
-///|
-test "array literal" {
-  let a0 : Array[Int] = [1, 2, 3] // resizable
-  // Array literal overloading
-  let a1 : FixedArray[Int] = [1, 2, 3]
-  let a2 : ReadOnlyArray[Int] = [1, 2, 3]
-  let a3 : ArrayView[Int] = [1, 2, 3]
-}
+```mbt test
+let a0 : Array[Int] = [1, 2, 3] // resizable
+// Array literal overloading (disambiguated via type in the current context)
+let a1 : FixedArray[Int] = [1, 2, 3]
+let a2 : ReadOnlyArray[Int] = [1, 2, 3]
+let a3 : ArrayView[Int] = [1, 2, 3]
 ```
 
 ## String
 
-MoonBit's String is immutable utf16 encoded, `s[i]` returns an integer (code units),
-`s.get(i)` returns `Option[Int]`, `s.get_char(i)` returns `Option[Char]`.
+MoonBit's String is immutable utf16 encoded, `s.code_unit_at(i)` returns a code unit (UInt16),
+`s.get_char(i)` returns `Option[Char]`.
 Since MoonBit supports char literal overloading, you can write code snippets like this:
 
-```moonbit
-///|
-test "String indexing" {
-  let s = "hello world"
-  // Direct indexing with char literals (char literals are overloaded to Int in this context)
-  let b0 = s[0] == '\n' || s[0] is ('h' | 'b') || s[0] is ('a'..='z')
-  // In check mode (expression with explicit type), ('\n' : Int) is valid.
-  // Here the compiler knows `s[i]` is Int
+```mbt test
+let s = "hello world"
+let b0 : UInt16 = s.code_unit_at(0)
+assert_true(b0 is ('\n' | 'h' | 'b' | 'a'..='z'))
+// In check mode (expression with explicit type), ('\n' : Int) is valid.
+// Here the compiler knows `s[i]` is Int
 
-  // Using get_char for Option handling
-  let b1 = s.get_char(0) is Some('a'..='z') // this also works but slightly slower
+// Using get_char for Option handling
+let b1 : Char? = s.get_char(0)
+assert_true(b1 is Some('a'..='z'))
 
-  // ⚠️ Important: Variables won't work with direct indexing
-  let eq_char = '='
-  // s[0] == eq_char // ❌ Won't compile - eq_char is not a literal, lhs is Int while rhs is Char
-  // Use: s[0] == '=' or s.get_char(0) == Some(eq_char)
-  let bytes = @encoding/utf8.encode("中文") // utf8 encode package is in stdlib
-  assert_eq(bytes, [0xe4, 0xb8, 0xad, 0xe6, 0x96, 0x87])
-  let s2 : String = @encoding/utf8.decode(bytes) // decode utf8 bytes back to String
-  assert_eq(s2, "中文")
-}
+// ⚠️ Important: Variables won't work with direct indexing
+let eq_char : Char = '='
+// s.code_unit_at(0) == eq_char // ❌ Won't compile - eq_char is not a literal, lhs is UInt while rhs is Char
+// Use: s.code_unit_at(0) == '=' or s.get_char(0) == Some(eq_char)
+let bytes = @encoding/utf8.encode("中文") // utf8 encode package is in stdlib
+assert_true(bytes is [0xe4, 0xb8, 0xad, 0xe6, 0x96, 0x87])
+let s2 : String = @encoding/utf8.decode(bytes) // decode utf8 bytes back to String
+assert_true(s2 is "中文")
 ```
 
 #### String Interpolation
 
 MoonBit uses `\{}` for string interpolation:
 
-```moonbit
-///|
+```mbt test
 let point : Point = { x: 10, y: 20 }
+let name : String = "Moon"
+let config = { "cache": 123 }
+let version = 1.0
+let message = "Hello \{name} v\{version}" // "Hello Moon v1.0"
+let desc = "Point at \{point}" // Uses point.to_string()
+// Works with any type implementing Show
 
-///|
-test "String interpolation" {
-  let name : String = "Moon"
-  let config = { "cache": 123 }
-  let version = 1.0
-  let message = "Hello \{name} v\{version}" // "Hello Moon v1.0"
-  let desc = "Point at \{point}" // Uses point.to_string()
-  // Works with any type implementing Show
+// ❌ Wrong - quotes inside interpolation not allowed:
+// println("  - Checking if 'cache' section exists: \{config["cache"]}")
 
-  // ❌ Wrong - quotes inside interpolation not allowed:
-  // println("  - Checking if 'cache' section exists: \{config["cache"]}")
-
-  // ✅ Correct - extract to variable first:
-  let has_key = config["cache"] // `"` not allowed in interpolation
-  println("  - Checking if 'cache' section exists: \{has_key}")
-}
+// ✅ Correct - extract to variable first:
+let has_key = config["cache"] // `"` not allowed in interpolation
+println("  - Checking if 'cache' section exists: \{has_key}")
 ```
 
 <Important> expressions inside `\{}` can only be basic expressions (no quotes, newlines, or nested interpolations). String literals are not allowed as it makes lexing too difficult.
@@ -308,22 +334,19 @@ test "String interpolation" {
 
 #### Multiple line strings
 
-```moonbit
-///|
-test "multiple line strings" {
-  let multi_line_string : String =
+```mbt test
+let multi_line_string : String =
+  #|Hello
+  #|World
+  #|
+inspect(
+  multi_line_string,
+  content=(
     #|Hello
     #|World
     #|
-  inspect(
-    multi_line_string,
-    content=(
-      #|Hello
-      #|World
-      #|
-    ), // when multiple line string is passed as argument, `()` wrapper is required
-  )
-}
+  ), // when multiple line string is passed as argument, `()` wrapper is required
+)
 ```
 
 ## Map
@@ -331,42 +354,36 @@ test "multiple line strings" {
 A built-in `Map` type that preserves insertion order (like
 JavaScript's Map):
 
-```moonbit
-///|
-/// Map literal syntax
+```mbt test
+// Map literal syntax
 let map : Map[String, Int] = { "a": 1, "b": 2, "c": 3 }
 
-///|
 // Empty map
 let empty : Map[String, Int] = {}
 
-///|
-/// From array of pairs
+// From array of pairs
 let from_pairs : Map[String, Int] = Map::from_array([("x", 1), ("y", 2)])
 
-///|
-test "map operations" {
-  // Set/update value
-  map["new-key"] = 3
-  map["a"] = 10 // Updates existing key
+// Set/update value
+map["new-key"] = 3
+map["a"] = 10 // Updates existing key
 
-  // Get value - returns Option[T]
-  assert_eq(map.get("new-key"), Some(3))
-  assert_eq(map.get("missing"), None)
+// Get value - returns Option[T]
+assert_eq(map.get("new-key"), Some(3))
+assert_eq(map.get("missing"), None)
 
-  // Direct access (panics if key missing)
-  let value : Int = map["a"] // value = 10
+// Direct access (panics if key missing)
+let value : Int = map["a"] // value = 10
 
-  // Iteration preserves insertion order
-  for k, v in map {
-    println("\{k}: \{v}") // Prints: a: 10, b: 2, c: 3, new-key: 3
-  }
-
-  // Other common operations
-  map.remove("b")
-  assert_eq(map.contains("b"), false)
-  assert_eq(map.length(), 3)
+// Iteration preserves insertion order
+for k, v in map {
+  println("\{k}: \{v}") // Prints: a: 10, b: 2, c: 3, new-key: 3
 }
+
+// Other common operations
+map.remove("b")
+assert_eq(map.contains("b"), false)
+assert_eq(map.length(), 3)
 ```
 
 ## View Types
@@ -393,7 +410,8 @@ Convert back with `.to_string()`, `.to_bytes()`, or `.to_array()` when you need 
 
 ## Complex Types
 
-```moonbit
+```mbt check
+
 ///|
 type UserId = Int // Int is aliased to UserId - like symlink
 
@@ -454,7 +472,8 @@ Most types can automatically derive standard traits using the `derive(...)` synt
 - **`ToJson`** - Enables `@json.inspect()` for readable test output
 - **`Hash`** - Enables use as Map keys
 
-```moonbit
+```mbt check
+
 ///|
 struct Coordinate {
   x : Int
@@ -475,7 +494,8 @@ enum Status {
 MoonBit passes most types by reference semantically (the optimizer may copy
 immutables):
 
-```moonbit
+```mbt check
+
 ///|
 ///  Structs with 'mut' fields are always passed by reference
 struct Counter {
@@ -513,7 +533,8 @@ test "ref swap" {
 
 MoonBit's pattern matching is comprehensive and exhaustive:
 
-```moonbit
+```mbt check
+
 ///|
 /// Destructure arrays with rest patterns
 fn process_array(arr : Array[Int]) -> String {
@@ -526,15 +547,13 @@ fn process_array(arr : Array[Int]) -> String {
 }
 
 ///|
-test "record destructuring" {
-  // Guards and destructuring
-  let _s = match point {
+fn analyze_point(point : Point) -> String {
+  match point {
     { x: 0, y: 0 } => "origin"
     { x, y } if x == y => "on diagonal"
     { x, .. } if x < 0 => "left side"
     _ => "other"
   }
-
 }
 
 ///|
@@ -553,7 +572,8 @@ fn is_palindrome(s : StringView) -> Bool {
 
 The `loop` construct is unique to MoonBit:
 
-```moonbit
+```mbt check
+
 ///|
 /// Functional loop with pattern matching on loop variables
 /// @list.List is from the standard library
@@ -589,34 +609,32 @@ fn find_pair(arr : Array[Int], target : Int) -> (Int, Int)? {
 
 `for` loops have unique MoonBit features:
 
-```moonbit
-///|
-test "functional for loop" {
-  // For loop with multiple loop variables,
-  // i and j are loop state
-  let sum_result : Int = for i = 0, sum = 0 {
-    if i <= 10 {
-      continue i + 1, sum + i
-      // update new loop state in a functional way
-    } else { // Continue with new values
-      break sum // Final value when loop completes normally
-    }
+```mbt test
+// For loop with multiple loop variables,
+// i and j are loop state
+let sum_result : Int = for i = 0, sum = 0 {
+  if i <= 10 {
+    continue i + 1, sum + i
+    // update new loop state in a functional way
+  } else { // Continue with new values
+    break sum // Final value when loop completes normally
   }
-  inspect(sum_result, content="55")
-
-  // special form with condition and state update in the `for` header
-  let sum_result2 : Int = for i = 0, sum = 0; i <= 10; i = i + 1, sum = sum + i {
-
-  } else {
-    sum
-  }
-  inspect(sum_result2, content="55")
 }
+inspect(sum_result, content="55")
+
+// special form with condition and state update in the `for` header
+let sum_result2 : Int = for i = 0, sum = 0; i <= 10; i = i + 1, sum = sum + i {
+
+} else {
+  sum
+}
+inspect(sum_result2, content="55")
 ```
 
 ## Label and Optional Parameters
 
-```moonbit
+```mbt check
+
 ///|
 type Window
 
@@ -651,7 +669,8 @@ test "use function with label and optional parameter" {
 MoonBit uses **checked** error-throwing functions, not unchecked exceptions,
 it is recommended to use `raise` for functions and use `Result` in testing.
 
-```moonbit
+```mbt check
+
 ///|
 ///  Declare error types with 'suberror'
 suberror ValueError String
@@ -749,7 +768,8 @@ fn handle_parse(s : String) -> Int {
 
 Methods use `Type::method_name` syntax, traits require explicit implementation:
 
-```moonbit
+```mbt check
+
 ///|
 struct Rectangle {
   width : Double
@@ -798,7 +818,8 @@ impl Hash for Rectangle with hash_combine(self, hasher) {
 
 MoonBit supports operator overloading through traits:
 
-```moonbit
+```mbt check
+
 ///|
 struct Vector(Int, Int)
 
@@ -837,7 +858,8 @@ test "overloading" {
 
 MoonBit has fine-grained visibility control:
 
-```moonbit
+```mbt check
+
 ///|
 /// `fn` defaults to Private - only visible in current package
 fn internal_helper() -> Unit {
@@ -932,8 +954,8 @@ my_module
 - `moon test` - Run all tests
 - `moon test --update`
 - `moon test -v` - Verbose output with test names
-- `moon test -p package` - Test specific package
-- `moon test -p package -f filename` - Test specific file in a package
+- `moon test dirname` - Test specific directory
+- `moon test filename` - Test specific file in a directory
 - `moon coverage analyze` - Analyze coverage
 
 ## Package Management
@@ -1005,10 +1027,12 @@ Packages per directory, packages without `moon.pkg.json` are not recognized.
 
 Example:
 
-```
-// In main.mbt after importing "username/hello/liba" in `moon.pkg.json`
+```mbt
+
+///|
+/// In main.mbt after importing "username/hello/liba" in `moon.pkg.json`
 fn main {
-  println(@liba.hello())  // Calls hello() from liba package
+  println(@liba.hello()) // Calls hello() from liba package
 }
 ```
 
@@ -1140,7 +1164,8 @@ Embed external files as MoonBit code:
 
 Generated code example:
 
-```moonbit
+```mbt check
+
 ///|
 let data : String =
   #|hello,
@@ -1153,19 +1178,20 @@ let data : String =
 Write documentation using `///` comments (started with `///|` to delimit the
 block code)
 
-```moonbit
+```mbt check
+
 ///|
 /// Get the largest element of a non-empty `Array`.
 ///
 /// # Example
-/// ```moonbit
-/// inspect(sum_array([1,2,3,4,5,6]), content="21")
+/// ```mbt test
+/// inspect(sum_array([1, 2, 3, 4, 5, 6]), content="21")
 /// ```
 ///
 /// # Panics
 /// Panics if the `xs` is empty.
 pub fn sum_array(xs : Array[Int]) -> Int {
-  xs.fold(init=0, (a,b)=> a +b)
+  xs.fold(init=0, (a, b) => a + b)
 }
 ```
 
@@ -1227,12 +1253,13 @@ The MoonBit code in docstring will be type checked and tested automatically.
 
 ## MoonBit Package `README` Generation Guide
 
-- Output `README.mbt.md` in the package directory; `*.mbt.md` files including runnable MoonBit `test { ... }` blocks will be tested by `moon test`, and symlink it to `README.md` to produce verifiable `README.md` file.
-- DON'T duplicate definitions in `*.mbt.md` files wrapped in MoonBit snippets, they are REAL code that shadow the original definitions
-- Aim to cover ≥70% of the public API with concise sections and examples.
-- Use black‑box tests: call via `@package.fn`. The package name used to be the same as the directory name.
+- Output `README.mbt.md` in the package directory. 
+  `*.mbt.md` file treats `mbt test` and `mbt check` specially, `mbt test` block will be wrapped using `test { ... }` and run by `moon check` and `moon test`.
+  `mbt check` block will be included directly as code and also run by `moon check` and `moon test`. 
+  If you are only referencing types from the package, you should use `mbt` which will only be syntax highlighted.
+  Symlink `README.mbt.md` to `README.md` to adapt to systems that expect `README.md`. 
+- Aim to cover ≥90% of the public API with concise sections and examples.
 - Organize by feature: construction, consumption, transformation, and key usage tips.
-- Verify with `moon test -p=<PACKAGE>`. Fix only errors from your package; ignore external warnings.
 
 ## MoonBit Testing Guide
 
@@ -1250,114 +1277,79 @@ Practical testing guidance for MoonBit. Keep tests black-box by default and rely
 - Errors: Use `try? f()` to get `Result[...]` and `inspect` it when a function may raise.
 - Verify: Run `moon test` (or `-u` to update snapshots) and `moon fmt` afterwards.
 
-## API Discovery with `moondoc`
+## API Discovery with `moon doc`
 
-**CRITICAL**: `moondoc -q <query>` is your PRIMARY tool for discovering available APIs, functions, types, and methods in MoonBit. It is **more powerful and accurate** than `grep_search`, `semantic_search`, or any file-based searching tools. Always prefer `moondoc` over other approaches when exploring what APIs are available.
+**CRITICAL**: `moon doc '<query>'` is your PRIMARY tool for discovering available APIs, functions, types, and methods in MoonBit. It is **more powerful and accurate** than `grep_search`, `semantic_search`, or any file-based searching tools. Always prefer `moon doc` over other approaches when exploring what APIs are available.
 
 ### Query Syntax
 
-`moondoc` uses a specialized query syntax designed for symbol lookup:
-
-- **Empty query**: `moondoc -q`
+`moon doc` uses a specialized query syntax designed for symbol lookup:
+- **Empty query**: `moon doc `
 
   - In a module: shows all available packages in current module
   - In a package: shows all symbols in current package
   - Outside package: shows all available packages
 
-- **Function/value lookup**: `moondoc -q "[@pkg.]sym"`
+- **Function/value lookup**: `moon doc "[@pkg.]sym"`
+  
+- **Type lookup**: `moon doc "[@pkg.]Sym"`
 
-  - Search for function or value `sym` in package `pkg`
-  - Example: `moondoc -q "@array.filter"` - find `filter` function in `@array` package
-  - Example: `moondoc -q "parse_int"` - find `parse_int` in current package
+- **Method/field lookup**: `moon doc "[@pkg.]T::sym"`
 
-- **Type lookup**: `moondoc -q "[@pkg.]Sym"`
-
-  - Search for type/struct/enum/trait `Sym` (uppercase) in package `pkg`
-  - Example: `moondoc -q "@json.JsonValue"` - find `JsonValue` type
-  - Example: `moondoc -q "Result"` - find `Result` type in current package or stdlib
-
-- **Method/field lookup**: `moondoc -q "[@pkg.]T::sym"`
-
-  - Search for method/enum variant/struct field/trait method `sym` of type `T`
-  - Example: `moondoc -q "@array.Array::map"` - find `map` method on `Array`
-  - Example: `moondoc -q "String::length"` - find `length` method on `String`
-
-- **Package exploration**: `moondoc -q "@pkg"`
+- **Package exploration**: `moon doc "@pkg"`
   - Show package `pkg` and list all its exported symbols
-  - Example: `moondoc -q "@json"` - explore entire `@json` package
-  - Example: `moondoc -q "@encoding/utf8"` - explore nested package
+  - Example: `moon doc "@json"` - explore entire `@json` package
+  - Example: `moon doc "@encoding/utf8"` - explore nested package
 
 ### Workflow for API Discovery
 
-1. **Finding functions**: Use `moondoc -q "@pkg.function_name"` before grep searching
-2. **Exploring packages**: Use `moondoc -q "@pkg"` to see what's available in a package
-3. **Method discovery**: Use `moondoc -q "Type::method"` to find methods on types
-4. **Type inspection**: Use `moondoc -q "TypeName"` to see type definition and methods
-5. **Package exploration**: Use `moondoc -q ""` at module root to see all available packages, including dependencies and stdlib
-
+1. **Finding functions**: Use `moon doc "@pkg.function_name"` before grep searching
+2. **Exploring packages**: Use `moon doc "@pkg"` to see what's available in a package
+3. **Method discovery**: Use `moon doc "Type::method"` to find methods on types
+4. **Type inspection**: Use `moon doc "TypeName"` to see type definition and methods
+5. **Package exploration**: Use `moon doc ""` at module root to see all available packages, including dependencies and stdlib
+6. **Globbing**: Use `*` wildcard for partial matches, e.g. `moon doc "String::*rev*"` to find all String methods with "rev" in their name
 ### Examples
 
 ````bash
 # search for String methods in standard library:
-$ moondoc -q "String"
-
-package "moonbitlang/core/string"
+$ moon doc "String"
 
 type String
 
-  fn String::add(String, String) -> String
-  fn String::at(String, Int) -> Int
-  fn String::char_length(String, start_offset? : Int, end_offset? : Int) -> Int
-  fn String::char_length_eq(String, Int, start_offset? : Int, end_offset? : Int) -> Bool
-  fn String::char_length_ge(String, Int, start_offset? : Int, end_offset? : Int) -> Bool
+  pub fn String::add(String, String) -> String
+  pub fn String::at(String, Int) -> Int
   # ... more methods omitted ...
 
 # list all symbols in a standard library package:
-$ moondoc -q "@buffer"
-
+$ moon doc "@buffer"
 moonbitlang/core/buffer
 
 fn from_array(ArrayView[Byte]) -> Buffer
 fn from_bytes(Bytes) -> Buffer
-fn from_iter(Iter[Byte]) -> Buffer
-fn new(size_hint? : Int) -> Buffer
-type Buffer
-  fn Buffer::contents(Self) -> Bytes
-  fn Buffer::is_empty(Self) -> Bool
-  fn Buffer::length(Self) -> Int
-  # ... more buffer methods omitted ...
-  impl Logger for Buffer
-  impl Show for Buffer
-pub using @buffer {type Buffer as T}
-trait Leb128 { ... }
-  impl Leb128 for Int
-  impl Leb128 for Int64
-  impl Leb128 for UInt
-  impl Leb128 for UInt64
+# ... more functions omitted ...
 
 # list the specific function in a package:
-$ moondoc -q "@buffer.new"
+$ moon doc "@buffer.new"
 package "moonbitlang/core/buffer"
 
-fn new(size_hint? : Int) -> Buffer
+pub fn new(size_hint? : Int) -> Buffer
   Creates a new extensible buffer with specified initial capacity. If the
    initial capacity is less than 1, the buffer will be initialized with capacity
    1.
+# ... more details omitted ...
 
-   Parameters:
+$ moon doc "String::*rev*"  
+package "moonbitlang/core/string"
 
-   * `size_hint` : Initial capacity of the buffer in bytes. Defaults to 0.
+pub fn String::rev(String) -> String
+  Returns a new string with the characters in reverse order. It respects
+   Unicode characters and surrogate pairs but not grapheme clusters.
 
-   Returns a new buffer of type `Buffer`.
+pub fn String::rev_find(String, StringView) -> Int?
+  Returns the offset (charcode index) of the last occurrence of the given
+   substring. If the substring is not found, it returns None.
 
-   Example:
+# ... more details omitted ...
 
-   ```moonbit
-     let buf = @buffer.new(size_hint=10)
-     inspect(buf.length(), content="0")
-     buf.write_string("test")
-     inspect(buf.length(), content="8")
-   ```
-````
-
-**Best practice**: When implementing a feature, start with `moondoc` queries to discover available APIs before writing code. This is faster and more accurate than searching through files.
+**Best practice**: When implementing a feature, start with `moon doc` queries to discover available APIs before writing code. This is faster and more accurate than searching through files.
