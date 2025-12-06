@@ -2,8 +2,13 @@
 
 all: clean fmt info build
 
-build:
-	moon build
+build: build-js build-wasm-gc
+
+build-js:
+	moon build --target js
+
+build-wasm-gc:
+	moon build --target wasm-gc
 
 fmt:
 	moon fmt
