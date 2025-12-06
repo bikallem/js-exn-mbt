@@ -9,5 +9,8 @@
             "use-js-builtin-string": true,
             "imported-string-constants": "_"
         }
-    }
+    },
+    "import": [
+        "bikallem/js_exn_mbt/dom"
+    ]
 }

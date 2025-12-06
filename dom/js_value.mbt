@@ -3,7 +3,7 @@
 pub type JsValue
 
 ///|
-pub trait TJsValue {
+pub(open) trait TJsValue {
   to_js(Self) -> JsValue
 }
 

@@ -1,5 +1,5 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "bikallem/js_exn_mbt"
+package "bikallem/js_exn_mbt/dom"
 
 // Values
 pub fn add_event_listener_options(capture? : Bool, passive? : Bool, once? : Bool, signal? : AbortSignal) -> AddEventListenerOptions
@@ -22,6 +22,7 @@ pub type AbortSignal
 pub impl TJsValue for AbortSignal
 
 type AddEventListenerOptions
+pub impl TAddEventListenerOptionsArg for AddEventListenerOptions
 
 #external
 pub type Document
@@ -41,6 +42,7 @@ pub fn EventListener::null() -> Self
 pub impl TJsValue for EventListener
 
 type EventListenerOptions
+pub impl TRemoveEventListenerOptionsArg for EventListenerOptions
 
 #external
 pub type EventTarget
@@ -67,7 +69,9 @@ pub fn JsValue::undefined() -> Self
 // Type aliases
 
 // Traits
-trait TAddEventListenerOptionsArg
+pub(open) trait TAddEventListenerOptionsArg {
+  to_js(Self) -> JsValue
+}
 pub impl TAddEventListenerOptionsArg for Bool
 
 pub trait TEventTarget : TJsValue {
@@ -75,11 +79,13 @@ pub trait TEventTarget : TJsValue {
   remove_event_listener(Self, String, EventListener, options? : &TRemoveEventListenerOptionsArg) -> Unit
 }
 
-pub trait TJsValue {
+pub(open) trait TJsValue {
   to_js(Self) -> JsValue
 }
 pub impl TJsValue for Bool
 
-trait TRemoveEventListenerOptionsArg
+pub(open) trait TRemoveEventListenerOptionsArg {
+  to_js(Self) -> JsValue
+}
 pub impl TRemoveEventListenerOptionsArg for Bool
 

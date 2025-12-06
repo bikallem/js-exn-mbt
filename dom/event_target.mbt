@@ -30,7 +30,7 @@ pub impl TEventTarget for EventTarget
 
 ///|
 /// Arg : options
-trait TAddEventListenerOptionsArg {
+pub(open) trait TAddEventListenerOptionsArg {
   to_js(self : Self) -> JsValue
 }
 
@@ -42,28 +42,9 @@ pub impl TAddEventListenerOptionsArg for Bool with to_js(self : Bool) -> JsValue
 type AddEventListenerOptions
 
 ///|
-impl TAddEventListenerOptionsArg for AddEventListenerOptions with to_js(
+pub impl TAddEventListenerOptionsArg for AddEventListenerOptions with to_js(
   self : AddEventListenerOptions,
 ) -> JsValue = "%identity"
-
-///|
-#cfg(target="js")
-extern "js" fn add_event_listener_options_ffi(
-  capture : Bool,
-  passive : Bool,
-  once : Bool,
-  signal : JsValue,
-) -> AddEventListenerOptions =
-  #| (capture, passive, once, signal) => ({ capture, passive, once, signal })
-
-///|
-#cfg(target="wasm-gc")
-fn add_event_listener_options_ffi(
-  capture : Bool,
-  passive : Bool,
-  once : Bool,
-  signal : JsValue,
-) -> AddEventListenerOptions = "webapi_AddEventListenerOptions" "new"
 
 ///|
 pub fn add_event_listener_options(
@@ -110,7 +91,7 @@ impl TEventTarget with add_event_listener(
 
 ///|
 /// Arg : options
-trait TRemoveEventListenerOptionsArg {
+pub(open) trait TRemoveEventListenerOptionsArg {
   to_js(self : Self) -> JsValue
 }
 
@@ -122,7 +103,7 @@ pub impl TRemoveEventListenerOptionsArg for Bool with to_js(self : Bool) -> JsVa
 type EventListenerOptions
 
 ///|
-impl TRemoveEventListenerOptionsArg for EventListenerOptions with to_js(
+pub impl TRemoveEventListenerOptionsArg for EventListenerOptions with to_js(
   self : EventListenerOptions,
 ) -> JsValue = "%identity"
 
