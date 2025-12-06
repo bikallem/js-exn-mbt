@@ -5,17 +5,17 @@
   <meta charset="UTF-8" />
   <link rel="shortcut icon" href="data:," />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Moonbit exn via js FFI</title>
+  <title>Moonbit FFI - "js" target</title>
   <style>
   </style>
 </head>
 
 <body>
   <script type="module">
-    import { wasmImportObject } from "./web-api.mjs";
+    import { wasmImportObject } from "./dom/web-api.mjs";
     Object.assign(globalThis, wasmImportObject);
   </script>
-  <script type="module" src="target/js/release/build/js_exn_mbt.js"></script>
+  <script type="module" src="target/js/release/build/cmd/buttons/buttons.js"></script>
 </body>
 
 </html>
