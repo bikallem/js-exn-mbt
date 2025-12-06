@@ -12,7 +12,7 @@
 
 <body>
   <script type="module">
-    import { wasmImportObject } from "./dom/web-api.mjs";
+    import { wasmImportObject } from "../web-api.mjs";
 
     const imports = {
       "moonbit:ffi": {
@@ -24,7 +24,7 @@
       ...wasmImportObject
     };
 
-    const main = await WebAssembly.instantiateStreaming(fetch("target/wasm-gc/release/build/apps/buttons/buttons.wasm"), imports,
+    const main = await WebAssembly.instantiateStreaming(fetch("../target/wasm-gc/release/build/apps/buttons/buttons.wasm"), imports,
       {
         builtins: ["js-string"],
         importedStringConstants: "_",
