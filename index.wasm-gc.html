@@ -24,7 +24,7 @@
       ...wasmImportObject
     };
 
-    const main = await WebAssembly.instantiateStreaming(fetch("target/wasm-gc/release/build/cmd/buttons/buttons.wasm"), imports,
+    const main = await WebAssembly.instantiateStreaming(fetch("target/wasm-gc/release/build/apps/buttons/buttons.wasm"), imports,
       {
         builtins: ["js-string"],
         importedStringConstants: "_",
